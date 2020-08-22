@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import axios from 'axios'
+import personService from './services/person'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
@@ -11,12 +11,14 @@ const App = () => {
   const [ searchWord, setSearchWord ] = useState('')
 
   useEffect(() => {
-      axios
-      .get("http://localhost:3001/persons")
-      .then(
-        response => {
-          setPersons(response.data)
-        })
+      personService
+      .getAll()
+      .then(response => {
+        setPersons(
+          response.data.filter(
+            persond => 'name' in persond
+          ))
+      })
     },[])
 
   const handleNumberChange = (event) => {
@@ -38,19 +40,53 @@ const App = () => {
       return result
     }, true)
     if (!notExist) {
-      alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook,
+      replace the old number with a new one?`)) {
+        const id = persons.find(p => p.name === newName).id
+        personService
+        .update(id, {name: newName, number: newNumber})
+        .then(response => 
+          setPersons( persons.map(p => 
+            p.id === response.data.id ? response.data : p
+            ) ))
+
+      }
+
+
     } else {
-      setPersons(persons.concat({name: newName, number: newNumber}))
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+      personService
+      .create(personObject)
+      .then(response => {
+        setPersons( persons.concat(response.data) )
+      })
     }
     setNewNumber('')
     setNewName('')
+  }
+
+  const deletePerson = (id) => {
+    const name = persons.find(p => p.id === id).name
+    if (window.confirm(`Delete ${name}`)) { 
+      console.log("clicccck")
+      personService
+      .deleteP(id)
+      .then(response => {
+        console.log(response.data)
+        setPersons( persons.filter(person =>
+          person.id !== response.data.id))
+      })
+    }
   }
 
   const filterPersons = (event) => {
     setSearchWord(event.target.value)
   }
 
-  const filteredPersons = persons.filter( person =>
+  const filteredPersons = persons.filter( person => 
     person.name.toLowerCase().includes(searchWord) 
   )    
 
@@ -66,7 +102,9 @@ const App = () => {
         value2={newNumber}
       />
       <h3>Numbers</h3>
-      <Persons filteredPersons={filteredPersons}/>
+      <Persons 
+      filteredPersons={filteredPersons} 
+      deletePerson={deletePerson} />
     </div>
   )
 }
