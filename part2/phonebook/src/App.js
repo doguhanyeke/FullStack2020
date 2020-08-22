@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/person'
+import Notification from './components/Notification'
 
 const App = () => {
   const [ persons, setPersons ] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchWord, setSearchWord ] = useState('')
+  const [ errorMes, setErrorMes ] = useState( null )
+  const [ errorType, setErrorType ] = useState( null )
 
   useEffect(() => {
       personService
@@ -42,6 +45,7 @@ const App = () => {
     if (!notExist) {
       if (window.confirm(`${newName} is already added to phonebook,
       replace the old number with a new one?`)) {
+        setErrorType( 'success' )
         const id = persons.find(p => p.name === newName).id
         personService
         .update(id, {name: newName, number: newNumber})
@@ -49,7 +53,11 @@ const App = () => {
           setPersons( persons.map(p => 
             p.id === response.data.id ? response.data : p
             ) ))
-
+        .catch(error => {
+          setErrorType( 'error' )
+          setErrorMes( `Information of ${newName} has already been removed from server` )
+          console.log(error)
+        })
       }
 
 
@@ -61,6 +69,8 @@ const App = () => {
       personService
       .create(personObject)
       .then(response => {
+        setErrorMes(`Added ${newName}`)
+        setErrorType('success')
         setPersons( persons.concat(response.data) )
       })
     }
@@ -71,13 +81,13 @@ const App = () => {
   const deletePerson = (id) => {
     const name = persons.find(p => p.id === id).name
     if (window.confirm(`Delete ${name}`)) { 
-      console.log("clicccck")
+      setErrorType( 'error' )
       personService
       .deleteP(id)
       .then(response => {
-        console.log(response.data)
+        setErrorMes( `Information of ${name} has already been removed from server` )
         setPersons( persons.filter(person =>
-          person.id !== response.data.id))
+          person.id !== id))
       })
     }
   }
@@ -93,6 +103,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMes} className={errorType} />
       <Filter onChange={filterPersons}/>
       <h3>Add a new</h3>
       <PersonForm onSubmit={addPerson} 
