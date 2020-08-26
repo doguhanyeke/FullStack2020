@@ -71,6 +71,7 @@ const App = () => {
       .then(response => {
         setErrorMes(`Added ${newName}`)
         setErrorType('success')
+        console.log("response data", response.data)
         setPersons( persons.concat(response.data) )
       })
     }
@@ -96,8 +97,11 @@ const App = () => {
     setSearchWord(event.target.value)
   }
 
-  const filteredPersons = persons.filter( person => 
-    person.name.toLowerCase().includes(searchWord) 
+  const filteredPersons = persons.filter( person => {
+    if (person.name) {
+      return person.name.toLowerCase().includes(searchWord) 
+    }
+  }
   )    
 
   return (
