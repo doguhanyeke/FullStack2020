@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = 'https://shrouded-earth-30493.herokuapp.com/api/persons'
+const baseUrl = '/api/persons'
 
 const getAll = () => {
     return axios.get(baseUrl)

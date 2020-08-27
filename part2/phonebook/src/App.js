@@ -43,8 +43,7 @@ const App = () => {
       return result
     }, true)
     if (!notExist) {
-      if (window.confirm(`${newName} is already added to phonebook,
-      replace the old number with a new one?`)) {
+      if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         setErrorType( 'success' )
         const id = persons.find(p => p.name === newName).id
         personService
