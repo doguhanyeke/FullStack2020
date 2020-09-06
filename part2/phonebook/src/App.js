@@ -44,18 +44,21 @@ const App = () => {
     }, true)
     if (!notExist) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-        setErrorType( 'success' )
+        
         const id = persons.find(p => p.name === newName).id
         personService
         .update(id, {name: newName, number: newNumber})
-        .then(response => 
+        .then(response => {
+          console.log('now', response)
+          setErrorType( 'success' )
           setPersons( persons.map(p => 
             p.id === response.data.id ? response.data : p
-            ) ))
+            ))
+        })
         .catch(error => {
+          console.log("hiihi", error.response.data)
           setErrorType( 'error' )
-          setErrorMes( `Information of ${newName} has already been removed from server` )
-          console.log(error)
+          setErrorMes( error.response.data.error)
         })
       }
 
@@ -68,10 +71,18 @@ const App = () => {
       personService
       .create(personObject)
       .then(response => {
+        console.log("he", response.data.error)
+        
         setErrorMes(`Added ${newName}`)
         setErrorType('success')
-        console.log("response data", response.data)
         setPersons( persons.concat(response.data) )
+        
+        console.log("response data", response.data)        
+      })
+      .catch(error => {
+        console.log("ülo", error.response.data)
+        setErrorMes(error.response.data.error)
+        setErrorType('error')
       })
     }
     setNewNumber('')
