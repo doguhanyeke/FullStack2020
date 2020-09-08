@@ -8,8 +8,8 @@ const middleware = require('./utils/middleware')
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-.then( () => logger.info("connected to mongodb"))
-.catch( (error) => logger.error("error in connection", error.message))
+    .then( () => logger.info("connected to mongodb"))
+    .catch( (error) => logger.error("error in connection", error.message))
 
 const app = express()
 
