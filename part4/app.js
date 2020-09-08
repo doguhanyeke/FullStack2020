@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const express = require('express')
 const cors = require('cors')
 const blogRouter = require('./controllers/bloglist')
+const userRouter = require('./controllers/user')
 const middleware = require('./utils/middleware')
 
 const mongoUrl = config.MONGODB_URI
@@ -18,6 +19,7 @@ app.use(express.json())
 
 app.use(middleware.requestLogger)
 app.use('/', blogRouter)
+app.use('/api/users', userRouter)
 app.use(middleware.unknownendpoint)
 app.use(middleware.errorHandler)
 
