@@ -3,11 +3,20 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const returnOneUser = require('../utils/list_helper').returnOneUser
 require('express-async-errors')
+const jwt = require('jsonwebtoken')
 
 blogRouter.get('/api/blogs', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', {blogs: 0})
     response.json(blogs)
 })
+
+const getToken = (req) => {
+  const auth = req.get('authorization')
+  if(auth && auth.toLowerCase().startsWith('bearer')) {
+    return auth.substring(7)
+  }
+  return null
+}
   
 blogRouter.post('/api/blogs', async (request, response) => {
     const body = request.body
@@ -18,20 +27,28 @@ blogRouter.post('/api/blogs', async (request, response) => {
       body.likes = 0
     }
 
-    const anyUser = await returnOneUser()
+    const token = getToken(request)
+    const userInfo = jwt.verify(token, process.env.SECRET)
+    if(!token || !userInfo.id || !userInfo.username){
+      return response.status(401).json({
+          error: 'token not authorized!'
+      })
+    }
+
+    const user = await User.findById(userInfo.id)
 
     const blog = new Blog({
       title: body.title,
       author: body.author,
       url: body.url,
       likes: body.likes,
-      user: anyUser._id
+      user: user._id
     })
 
     const savedBlog = await blog.save()
 
-    anyUser.blogs = anyUser.blogs.concat(savedBlog._id)
-    await User.findByIdAndUpdate(anyUser._id, anyUser, {new: true})
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await User.findByIdAndUpdate(user._id, user, {new: true})
 
     return response.status(201).json(savedBlog)    
 })
