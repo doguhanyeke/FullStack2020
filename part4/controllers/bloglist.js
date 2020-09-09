@@ -50,9 +50,31 @@ blogRouter.post('/api/blogs', async (request, response) => {
 })
 
 blogRouter.delete('/api/blogs/:id', async (req, res, next) => {
-  const idOfBlog = req.params.id
-  const result = await Blog.findByIdAndRemove(idOfBlog)
-  res.status(204).end()
+  if(!req.token){
+    return res.status(401).json({
+      error: 'token not found!'
+    })
+  }
+  
+  const userInfo = jwt.verify(req.token, process.env.SECRET)
+  if(!userInfo.id || !userInfo.username){
+    return res.status(401).json({
+        error: 'token not authorized!'
+    })
+  }
+
+  const blog = await Blog.findById(req.params.id)
+  const user = await User.findById(userInfo.id)
+  if(blog.user.toString() !== user._id.toString()){
+    return res.status(401).json({
+      error: 'different username used for deleting!'
+    })
+  }
+
+  const result = await Blog.findByIdAndRemove(req.params.id)
+  return res.status(204).send({
+    info: "operation successful"
+  })
 })
 
 blogRouter.put('/api/blogs/:id', async (req, res, next) => {
