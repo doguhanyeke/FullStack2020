@@ -1,24 +1,39 @@
 const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const returnOneUser = require('../utils/list_helper').returnOneUser
 require('express-async-errors')
 
 blogRouter.get('/api/blogs', async (request, response) => {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user', {blogs: 0})
     response.json(blogs)
 })
   
 blogRouter.post('/api/blogs', async (request, response) => {
-    const blog = new Blog(request.body)
-    if(!blog.likes){
-      blog.likes = 0
+    const body = request.body
+    if(body.title === undefined && body.url === undefined){
+      return response.status(400).end()
+    }
+    if(body.likes === undefined){
+      body.likes = 0
     }
 
-    if(!blog.title && !blog.url){
-      response.status(400).end()
-    } else {
-      const result = await blog.save()
-      response.status(201).json(result)
-    }    
+    const anyUser = await returnOneUser()
+
+    const blog = new Blog({
+      title: body.title,
+      author: body.author,
+      url: body.url,
+      likes: body.likes,
+      user: anyUser._id
+    })
+
+    const savedBlog = await blog.save()
+
+    anyUser.blogs = anyUser.blogs.concat(savedBlog._id)
+    await User.findByIdAndUpdate(anyUser._id, anyUser, {new: true})
+
+    return response.status(201).json(savedBlog)    
 })
 
 blogRouter.delete('/api/blogs/:id', async (req, res, next) => {

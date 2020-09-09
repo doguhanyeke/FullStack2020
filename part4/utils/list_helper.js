@@ -1,4 +1,5 @@
 var _ = require('lodash')
+const User = require('../models/user')
 
 const dummy = (blogs) => {
     return 1
@@ -113,10 +114,20 @@ const mostLikes = (blogs) => {
     }
 }
 
+const randomNumberGenerator = (maxNum) => {
+    return (Math.random() * 10 < 5) ? 0 : 1
+}
+
+async function returnOneUser() {
+    const result = await User.find({})
+    return result[randomNumberGenerator(result.length)]
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
     mostBlogs,
-    mostLikes
+    mostLikes,
+    returnOneUser
 }

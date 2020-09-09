@@ -4,7 +4,7 @@ const bycrypt = require('bcrypt')
 require('express-async-errors')
 
 userRouter.get('/', async (req, res) => {
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs', {title: 1, author: 1, url: 1})
     return res.status(200).json(users)
 })
 
