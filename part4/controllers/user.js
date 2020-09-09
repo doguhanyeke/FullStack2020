@@ -8,7 +8,14 @@ userRouter.get('/', async (req, res) => {
     return res.status(200).json(users)
 })
 
-userRouter.post('/', async (req, res) => {
+userRouter.post('/', async (req, res, next) => {
+    if (req.body.password === undefined) {
+        return res.status(400).send({error: 'password must be provided'})
+    }
+    if (req.body.password.length < 3) {
+        return res.status(400).send({error: 'password must be at least 3-characters long'})
+    }
+
     const passHash = await bycrypt.hash(req.body.password, 10)
     console.log(typeof(passHash))
     const newUser = new User({
