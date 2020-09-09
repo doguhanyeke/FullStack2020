@@ -9,14 +9,6 @@ blogRouter.get('/api/blogs', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', {blogs: 0})
     response.json(blogs)
 })
-
-const getToken = (req) => {
-  const auth = req.get('authorization')
-  if(auth && auth.toLowerCase().startsWith('bearer')) {
-    return auth.substring(7)
-  }
-  return null
-}
   
 blogRouter.post('/api/blogs', async (request, response) => {
     const body = request.body
@@ -26,10 +18,14 @@ blogRouter.post('/api/blogs', async (request, response) => {
     if(body.likes === undefined){
       body.likes = 0
     }
-
-    const token = getToken(request)
-    const userInfo = jwt.verify(token, process.env.SECRET)
-    if(!token || !userInfo.id || !userInfo.username){
+    if(!request.token){
+      return response.status(401).json({
+        error: 'token not found!'
+      })
+    }
+    
+    const userInfo = jwt.verify(request.token, process.env.SECRET)
+    if(!userInfo.id || !userInfo.username){
       return response.status(401).json({
           error: 'token not authorized!'
       })
