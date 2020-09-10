@@ -9,6 +9,9 @@ const App = () => {
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -24,7 +27,7 @@ const App = () => {
         password: password
     })
     console.log("here", response.data)
-    window.localStorage.setItem("userToken", response.data.token.toString())
+    window.localStorage.setItem("userToken", `bearer ${response.data.token.toString()}`)
     setUser(response.data.name)
     return response.data
   }
@@ -49,7 +52,6 @@ const App = () => {
           type='password'
           value={password} 
           onChange={({target}) => setPassword(target.value)} >
-
           </input>
       </div>
       <button> login </button>
@@ -66,6 +68,48 @@ const App = () => {
     </div>
   )
 
+  const handleCreate = async (event) => {
+    event.preventDefault()
+
+    const config = {
+      headers: {Authorization: window.localStorage.getItem('userToken')}
+    }
+    
+    const response = await axios.post('/api/blogs', {
+      title: title,
+      author: author,
+      url: url
+    }, config)
+
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+
+    return response.data
+    
+  }
+
+  const createPart = () => (
+    <div>
+      <h3>create new</h3>
+      <form onSubmit={handleCreate} >
+        <div>
+          title:
+          <input type="text" name="title" value={title} onChange={({target}) => setTitle(target.value)} ></input>
+        </div>
+        <div>
+          author:
+          <input type="text" name="author" value={author} onChange={({target}) => setAuthor(target.value)} ></input>
+        </div>
+        <div>
+          url:
+          <input type="text" name="url" value={url} onChange={({target}) => setUrl(target.value)} ></input>    
+        </div>
+        <button>create</button>
+      </form>
+    </div>
+  )
+
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
     setUser('')
@@ -79,6 +123,7 @@ const App = () => {
       <h2>blogs</h2>
       <h3>
         {user ? loginInfo() : null}
+        {user ? createPart() : null}
       </h3>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
