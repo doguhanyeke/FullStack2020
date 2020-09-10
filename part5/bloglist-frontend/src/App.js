@@ -39,7 +39,6 @@ const App = () => {
           type='text' 
           value={username} 
           onChange={({target}) => {
-              console.log("hade", target.value)
               setUserName(target.value)
           }
           } ></input>
@@ -58,15 +57,29 @@ const App = () => {
     </div>
   )
 
-  console.log(username, password)
+  const loginInfo = () => (
+    <div>
+      <pre>
+        {user} logged in
+        <button onClick={handleLogOut} >log out</button>
+      </pre>
+    </div>
+  )
+
+  const handleLogOut = () => {
+    window.localStorage.removeItem('userToken')
+    setUser('')
+    setUserName('')
+    setPassword('')
+  }
 
   return (
     <div>
       {user ? null : loginForm()}
       <h2>blogs</h2>
-      <pre>
-        {user ? `${user} logged in` : null}
-      </pre>
+      <h3>
+        {user ? loginInfo() : null}
+      </h3>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
