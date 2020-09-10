@@ -81,6 +81,8 @@ const App = () => {
       url: url
     }, config)
 
+    setBlogs(blogs.concat(response.data))
+
     setTitle('')
     setAuthor('')
     setUrl('')
