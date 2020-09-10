@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import axios from 'axios'
-import 'express-async-errors'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +12,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [loginMessage, setLoginMessage] = useState('')
+  const [postMessage, setPostMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -22,11 +24,22 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log("handle login")
-    const response = await axios.post('/api/login', {
+    let response = null
+    try{
+      response = await axios.post('/api/login', {
         username: username,
         password: password
-    })
-    console.log("here", response.data)
+      })
+    } catch {
+      setLoginMessage('wrong username or password')
+      setTimeout(() => {
+        setLoginMessage('')
+        setUserName('')
+        setPassword('')
+      }, 5000)
+      return
+    }
+    
     window.localStorage.setItem("userToken", `bearer ${response.data.token.toString()}`)
     setUser(response.data.name)
     return response.data
@@ -35,6 +48,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
+      <Notification message={loginMessage} />
       <form onSubmit={handleLogin}>
       <div>
           username
@@ -83,9 +97,16 @@ const App = () => {
 
     setBlogs(blogs.concat(response.data))
 
+    setPostMessage(`a new blog ${response.data.title} added`)
+    setTimeout(() => {
+      setPostMessage('')
+    }, 5000)
+
     setTitle('')
     setAuthor('')
     setUrl('')
+
+
 
     return response.data
     
@@ -124,6 +145,7 @@ const App = () => {
       {user ? null : loginForm()}
       <h2>blogs</h2>
       <h3>
+        <Notification message={postMessage}/>
         {user ? loginInfo() : null}
         {user ? createPart() : null}
       </h3>
