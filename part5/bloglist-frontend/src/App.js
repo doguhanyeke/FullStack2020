@@ -104,6 +104,12 @@ const App = () => {
     )
   }
 
+  function compare(a, b) {
+    if(a.likes > b.likes) return -1
+    if(b.likes > a.likes) return 1
+    return
+  }
+
   return (
     <div>
       {user ? null : loginForm()}
@@ -113,7 +119,7 @@ const App = () => {
         {user ? loginInfo() : null}
         {user ? createForm() : null}
       </h3>
-      {blogs.map(blog =>
+      {blogs.sort(compare).map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
     </div>
