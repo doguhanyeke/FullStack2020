@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import axios from 'axios'
@@ -14,6 +15,8 @@ const App = () => {
   const [url, setUrl] = useState('')
   const [loginMessage, setLoginMessage] = useState('')
   const [postMessage, setPostMessage] = useState('')
+
+  const [createFormVisible, setCreateFormVisible] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -106,32 +109,32 @@ const App = () => {
     setAuthor('')
     setUrl('')
 
-
-
     return response.data
-    
   }
 
-  const createPart = () => (
-    <div>
-      <h3>create new</h3>
-      <form onSubmit={handleCreate} >
-        <div>
-          title:
-          <input type="text" name="title" value={title} onChange={({target}) => setTitle(target.value)} ></input>
+  const createForm = () => {
+    const hideWhenVisible = {display: createFormVisible ? 'none': ''}
+    const showWhenVisible = {display: createFormVisible ? '': 'none'}
+    return(
+      <div>
+        <div style={hideWhenVisible}>
+          <button onClick={() => setCreateFormVisible(true)}>new note</button>
         </div>
-        <div>
-          author:
-          <input type="text" name="author" value={author} onChange={({target}) => setAuthor(target.value)} ></input>
+        <div style={showWhenVisible}>
+          <CreateForm 
+            handleCreate={handleCreate}
+            handleTitleChange={({target}) => setTitle(target.value)}
+            handleAuthorChange={({target}) => setAuthor(target.value)}
+            handleUrlChange={({target}) => setUrl(target.value)}
+            title={title}
+            author={author}
+            url={url}
+            handleCancelClick={() => setCreateFormVisible(false)}
+          />
         </div>
-        <div>
-          url:
-          <input type="text" name="url" value={url} onChange={({target}) => setUrl(target.value)} ></input>    
-        </div>
-        <button>create</button>
-      </form>
-    </div>
-  )
+      </div>
+    )
+  }
 
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
@@ -147,7 +150,7 @@ const App = () => {
       <h3>
         <Notification message={postMessage}/>
         {user ? loginInfo() : null}
-        {user ? createPart() : null}
+        {user ? createForm() : null}
       </h3>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
