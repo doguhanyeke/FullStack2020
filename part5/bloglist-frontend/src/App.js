@@ -72,12 +72,17 @@ const App = () => {
     </div>
   )
 
+  const handleLogOut = () => {
+    window.localStorage.removeItem('userToken')
+    setUser('')
+    setUserName('')
+    setPassword('')
+  }
+
   const loginInfo = () => (
     <div>
-      <pre>
         {user} logged in
         <button onClick={handleLogOut} >log out</button>
-      </pre>
     </div>
   )
 
@@ -97,10 +102,6 @@ const App = () => {
         </div>
       </div>
     )
-  }
-
-  const handleLogOut = () => {
-    window.localStorage.removeItem('userToken')
   }
 
   return (
