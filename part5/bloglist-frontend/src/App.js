@@ -10,19 +10,15 @@ const App = () => {
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [loginMessage, setLoginMessage] = useState('')
-  const [postMessage, setPostMessage] = useState('')
-
   const [createFormVisible, setCreateFormVisible] = useState(false)
+  const [postMessage, setPostMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
-  }, [])
+  }, [postMessage])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -85,33 +81,6 @@ const App = () => {
     </div>
   )
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-
-    const config = {
-      headers: {Authorization: window.localStorage.getItem('userToken')}
-    }
-    
-    const response = await axios.post('/api/blogs', {
-      title: title,
-      author: author,
-      url: url
-    }, config)
-
-    setBlogs(blogs.concat(response.data))
-
-    setPostMessage(`a new blog ${response.data.title} added`)
-    setTimeout(() => {
-      setPostMessage('')
-    }, 5000)
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-
-    return response.data
-  }
-
   const createForm = () => {
     const hideWhenVisible = {display: createFormVisible ? 'none': ''}
     const showWhenVisible = {display: createFormVisible ? '': 'none'}
@@ -122,14 +91,8 @@ const App = () => {
         </div>
         <div style={showWhenVisible}>
           <CreateForm 
-            handleCreate={handleCreate}
-            handleTitleChange={({target}) => setTitle(target.value)}
-            handleAuthorChange={({target}) => setAuthor(target.value)}
-            handleUrlChange={({target}) => setUrl(target.value)}
-            title={title}
-            author={author}
-            url={url}
             handleCancelClick={() => setCreateFormVisible(false)}
+            setPostMessage={setPostMessage}
           />
         </div>
       </div>
@@ -138,9 +101,6 @@ const App = () => {
 
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
-    setUser('')
-    setUserName('')
-    setPassword('')
   }
 
   return (
