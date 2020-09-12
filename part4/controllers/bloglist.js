@@ -65,7 +65,12 @@ blogRouter.delete('/api/blogs/:id', async (req, res, next) => {
 
   const blog = await Blog.findById(req.params.id)
   const user = await User.findById(userInfo.id)
-  if(blog.user.toString() !== user._id.toString()){
+  console.log("blog", blog.toJSON())
+  console.log("user", user)
+  console.log("user id", user._id)
+  console.log("blog user id: ", blog.toJSON().user.toString())
+
+  if(blog.toJSON().user.toString() !== user._id.toString()){
     return res.status(401).json({
       error: 'different username used for deleting!'
     })

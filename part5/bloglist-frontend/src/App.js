@@ -10,6 +10,7 @@ const App = () => {
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState('')
+  const [userid, setUserId] = useState('')
   const [loginMessage, setLoginMessage] = useState('')
   const [createFormVisible, setCreateFormVisible] = useState(false)
   const [postMessage, setPostMessage] = useState('')
@@ -41,6 +42,7 @@ const App = () => {
     
     window.localStorage.setItem("userToken", `bearer ${response.data.token.toString()}`)
     setUser(response.data.name)
+    setUserId(response.data.id)
     return response.data
   }
 
@@ -75,6 +77,7 @@ const App = () => {
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
     setUser('')
+    setUserId('')
     setUserName('')
     setPassword('')
   }
@@ -120,7 +123,7 @@ const App = () => {
         {user ? createForm() : null}
       </h3>
       {blogs.sort(compare).map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} userid={userid} />
       )}
     </div>
   )
