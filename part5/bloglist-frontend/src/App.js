@@ -13,6 +13,7 @@ const App = () => {
   const [userid, setUserId] = useState('')
   const [loginMessage, setLoginMessage] = useState('')
   const [createFormVisible, setCreateFormVisible] = useState(false)
+  const [loginFormVisible, setLoginFormVisible] = useState(false)
   const [postMessage, setPostMessage] = useState('')
 
   useEffect(() => {
@@ -46,33 +47,43 @@ const App = () => {
     return response.data
   }
 
-  const loginForm = () => (
+  const loginForm = () => {
+    const showWhenLoginVisible = {display: loginFormVisible ? '' : 'none'}
+    const showWhenLoginNotVisible = {display: loginFormVisible ? 'none': ''}
+
+    const loggedInInfo = {display: window.localStorage.getItem('userToken') ? '' : 'none'}
+    return(
     <div>
       <h2>Log in to application</h2>
       <Notification message={loginMessage} />
-      <form onSubmit={handleLogin}>
-      <div>
-          username
-          <input 
-          type='text' 
-          value={username} 
-          onChange={({target}) => {
-              setUserName(target.value)
-          }
-          } ></input>
+      <div style={loggedInInfo} >
+        {user} logged in
+        <button onClick={handleLogOut} >log out</button>
       </div>
-      <div>
-          password
-          <input 
-          type='password'
-          value={password} 
-          onChange={({target}) => setPassword(target.value)} >
-          </input>
-      </div>
-      <button> login </button>
+      <button style={showWhenLoginNotVisible} onClick={() => setLoginFormVisible(true)} id='login-visible-button'>login</button>
+      <form style={showWhenLoginVisible} onSubmit={handleLogin}>
+        <div>
+            username
+            <input 
+            id='username'
+            type='text' 
+            value={username} 
+            onChange={({target}) => {setUserName(target.value)}} ></input>
+        </div>
+        <div>
+            password
+            <input 
+            id='password'
+            type='password'
+            value={password} 
+            onChange={({target}) => setPassword(target.value)} >
+            </input>
+        </div>
+        <button id='login-button'> login </button>
       </form>
+      <button style={showWhenLoginVisible} onClick={() => setLoginFormVisible(false)} > cancel </button>
     </div>
-  )
+  )}
 
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')

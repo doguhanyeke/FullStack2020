@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
     "express-async-errors": "^3.1.1",
+    "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.1"
@@ -17,7 +16,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "eslint": "eslint .",
+    "cypress:open": "cypress open",
+    "test:e2e": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -35,5 +37,12 @@
     ]
   },
   "proxy": "http://localhost:3001",
-  "secure": false
+  "secure": false,
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "cypress": "^5.1.0",
+    "eslint-plugin-cypress": "^2.11.1",
+    "eslint-plugin-jest": "^24.0.0"
+  }
 }
