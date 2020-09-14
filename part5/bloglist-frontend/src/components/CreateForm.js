@@ -1,41 +1,31 @@
 import React, {useState} from 'react'
-import axios from 'axios'
 
-const CreateForm = ({
-    handleCancelClick,
-    setPostMessage
-    }) => {
+const CreateForm = ({createNewNote, setPostMessage}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
     const handleCreate = async (event) => {
-        event.preventDefault()
-        const config = {
-          headers: {Authorization: window.localStorage.getItem('userToken')}
-        }
-        
-        const response = await axios.post('/api/blogs', {
-          title: title,
-          author: author,
-          url: url
-        }, config)
-    
-        setPostMessage(`a new blog ${response.data.title} added`)
-        setTimeout(() => {
-          setPostMessage('')
-        }, 5000)
-    
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-    
-        return response.data
+      event.preventDefault()
+      await createNewNote({
+        title: title,
+        author: author,
+        url: url
+      })
+      setPostMessage(`a new blog ${title} added`)
+
+      setTimeout(() => {
+        setPostMessage('')
+      }, 5000)
+  
+      setTitle('')
+      setAuthor('')
+      setUrl('')
     }
   
     return (
     <div>
-      <h3>create new</h3>
+      <h3>Create New Blog</h3>
       <form onSubmit={handleCreate} >
         <div>
           title:
@@ -51,7 +41,6 @@ const CreateForm = ({
         </div>
         <button>create</button>
       </form>
-      <button onClick={handleCancelClick} >cancel</button>
     </div>
     )
 }

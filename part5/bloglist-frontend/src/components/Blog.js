@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import axios from 'axios'
 
-const Blog = ({ blog, userid }) => {
+const Blog = ({ blog, userId }) => {
   const [detailVisible, setdetailVisible] = useState(false)
   const [currentBlog, setCurrentBlog] = useState(blog)
 
   const blogStyle = {
-    display: currentBlog ? '' : 'none',
+    display: currentBlog.id !== '' ? '' : 'none',  
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
@@ -30,6 +30,7 @@ const Blog = ({ blog, userid }) => {
     const response = await axios.put(`/api/blogs/${currentBlog.id}`, newBlog, config)
     console.log(response.data)
     setCurrentBlog(response.data)
+    
   }
 
   const handleRemoveBlog = async () => {
@@ -39,13 +40,26 @@ const Blog = ({ blog, userid }) => {
       }
       const response = await axios.delete(`/api/blogs/${currentBlog.id}`, config)
       console.log(response.data)
-      setCurrentBlog({})
+      setCurrentBlog({
+        title: '',
+        author: '',
+        url: '',
+        likes: 0,
+        user: {
+          username: '',
+          name: '',
+          id: ''
+        },
+        id: ''
+      })
       setdetailVisible(false)
     } 
   }
-  console.log("here", userid, currentBlog.user.id)
+
+  console.log("aha", userId, currentBlog.user.id)
+  
   const removeStyle = {
-    display: userid && currentBlog && userid === currentBlog.user.id.toString() ? '' : 'none'
+    display: userId === currentBlog.user.id ? '' : 'none'
   }
 
   return(
