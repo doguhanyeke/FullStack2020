@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import PropTypes from 'prop-types'
 
 const CreateForm = ({createNewNote, setPostMessage}) => {
     const [title, setTitle] = useState('')
@@ -43,6 +44,11 @@ const CreateForm = ({createNewNote, setPostMessage}) => {
       </form>
     </div>
     )
+}
+
+CreateForm.propTypes = {
+  createNewNote: PropTypes.func.isRequired,
+  setPostMessage: PropTypes.func.isRequired
 }
 
 export default CreateForm

@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import axios from 'axios'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, userId }) => {
   const [detailVisible, setdetailVisible] = useState(false)
@@ -85,6 +86,11 @@ const Blog = ({ blog, userId }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired
 }
 
 export default Blog
