@@ -15,9 +15,9 @@ const App = () => {
 
   useEffect(() => {
     blogService
-    .getAll()
-    .then(blogs => setBlogs( blogs )
-    )  
+      .getAll()
+      .then(blogs => setBlogs( blogs )
+      )
   }, [postMessage])
 
   useEffect(() => {
@@ -31,13 +31,13 @@ const App = () => {
 
   const createNewNote = async (newNote) => {
     const config = {
-      headers: {Authorization: window.localStorage.getItem('userToken')}
+      headers: { Authorization: window.localStorage.getItem('userToken') }
     }
-    const response = await axios.post('/api/blogs', newNote, config)  
+    const response = await axios.post('/api/blogs', newNote, config)
     setBlogs(blogs.concat(response.data))
   }
 
-  /* 
+  /*
   written for sort func
   */
   function compare(a, b) {
@@ -50,7 +50,7 @@ const App = () => {
   Since the user needs to be logged in to make a create blog request,
   create note button is hiden from the view, when there is no user logged in.
   */
-  const showCreateFormWhenUserAvailable = {display: userId !== '' ? '' : 'none'}
+  const showCreateFormWhenUserAvailable = { display: userId !== '' ? '' : 'none' }
 
   return (
     <div>
@@ -59,7 +59,7 @@ const App = () => {
         <Notification message={loginMessage}/>
       </h3>
       <Togglable buttonLabel='login'>
-        <LoginForm 
+        <LoginForm
           createLogin={createLogin}
           setLoginMessage={setLoginMessage}
           setUserId={setUserId}
@@ -70,7 +70,7 @@ const App = () => {
       </h3>
       <div style={showCreateFormWhenUserAvailable}>
         <Togglable buttonLabel='create blog'>
-          <CreateForm 
+          <CreateForm
             createNewNote={createNewNote}
             setPostMessage={setPostMessage}
           />
@@ -79,11 +79,10 @@ const App = () => {
 
       <h3> All Blogs</h3>
       {blogs.sort(compare).map(blog =>
-        <Blog 
-          key={blog.id} 
+        <Blog
+          key={blog.id}
           blog={blog}
-          userId={userId}
-       />
+          userId={userId}/>
       )}
     </div>
   )

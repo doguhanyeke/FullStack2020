@@ -8,7 +8,7 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
   
   const handleLogin = async (event) => {
     event.preventDefault()
-    try{
+    try {
       const response = await createLogin({
         username: username, 
         password: password
@@ -23,7 +23,8 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
 
       setUserName('')
       setPassword('')
-    } catch{
+    } 
+    catch {
       console.error("error in getting token")
     }
   }

@@ -16,12 +16,12 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react", "jest", "cypress"
+        "react", "jest"
     ],
     "rules": {
         "indent": [
             "error",
-            4  
+            2  
         ],
         "linebreak-style": [
             "error",
