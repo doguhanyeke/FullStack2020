@@ -46,6 +46,10 @@ const App = () => {
     return
   }
 
+  /*
+  Since the user needs to be logged in to make a create blog request,
+  create note button is hiden from the view, when there is no user logged in.
+  */
   const showCreateFormWhenUserAvailable = {display: userId !== '' ? '' : 'none'}
 
   return (
