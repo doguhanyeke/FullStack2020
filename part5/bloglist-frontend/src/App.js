@@ -29,6 +29,10 @@ const App = () => {
     return response.data
   }
 
+  const updateBlogs = (blog) => {
+    setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
+  }
+
   const createNewNote = async (newNote) => {
     const config = {
       headers: { Authorization: window.localStorage.getItem('userToken') }
@@ -53,7 +57,7 @@ const App = () => {
   const showCreateFormWhenUserAvailable = { display: userId !== '' ? '' : 'none' }
 
   return (
-    <div>
+    <div className='component' >
       <h1>blogs</h1>
       <h3>
         <Notification message={loginMessage}/>
@@ -82,7 +86,8 @@ const App = () => {
         <Blog
           key={blog.id}
           blog={blog}
-          userId={userId}/>
+          userId={userId}
+          updateBlogs={updateBlogs} />
       )}
     </div>
   )

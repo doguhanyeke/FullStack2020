@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, userId }) => {
+const Blog = ({ blog, userId, updateBlogs }) => {
   const [detailVisible, setdetailVisible] = useState(false)
   const [currentBlog, setCurrentBlog] = useState(blog)
 
@@ -29,9 +29,8 @@ const Blog = ({ blog, userId }) => {
       headers: { Authorization: window.localStorage.getItem('userToken') }
     }
     const response = await axios.put(`/api/blogs/${currentBlog.id}`, newBlog, config)
-    console.log(response.data)
+    updateBlogs(response.data)
     setCurrentBlog(response.data)
-
   }
 
   const handleRemoveBlog = async () => {
@@ -57,24 +56,22 @@ const Blog = ({ blog, userId }) => {
     }
   }
 
-  console.log('aha', userId, currentBlog.user.id)
-
   const removeStyle = {
-    display: userId === currentBlog.user.id ? '' : 'none'
+    display: currentBlog.user && userId === currentBlog.user.id ? '' : 'none'
   }
 
   return(
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {currentBlog.title} {currentBlog.author}
-      <button onClick={() => setdetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
-      <div style={showDetails}>
+      <button className='view-hide-button' onClick={() => setdetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
+      <div className='blog-details' style={showDetails}>
         <ul>
-          <li>
+          <li className='url-li' >
             {currentBlog.url}
           </li>
-          <li>
+          <li className='likes-li' >
             {currentBlog.likes}
-            <button onClick={increaseLikeofBlog}>like</button>
+            <button className='like-button' onClick={increaseLikeofBlog}>like</button>
           </li>
           <li>
             {currentBlog.user ? currentBlog.user.name : null}
