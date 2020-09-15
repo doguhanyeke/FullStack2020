@@ -63,7 +63,7 @@ const Blog = ({ blog, userId, updateBlogs }) => {
   return(
     <div style={blogStyle} className='blog'>
       {currentBlog.title} {currentBlog.author}
-      <button className='view-hide-button' onClick={() => setdetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
+      <button className='viewHideButton' onClick={() => setdetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
       <div className='blog-details' style={showDetails}>
         <ul>
           <li className='url-li' >
@@ -71,7 +71,7 @@ const Blog = ({ blog, userId, updateBlogs }) => {
           </li>
           <li className='likes-li' >
             {currentBlog.likes}
-            <button className='like-button' onClick={increaseLikeofBlog}>like</button>
+            <button className='likeButton' onClick={increaseLikeofBlog}>like</button>
           </li>
           <li>
             {currentBlog.user ? currentBlog.user.name : null}

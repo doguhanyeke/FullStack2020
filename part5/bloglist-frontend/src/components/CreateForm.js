@@ -27,18 +27,18 @@ const CreateForm = ({ createNewNote, setPostMessage }) => {
   return (
     <div>
       <h3>Create New Blog</h3>
-      <form onSubmit={handleCreate} >
+      <form className='form' onSubmit={handleCreate} >
         <div>
           title:
-          <input type="text" name="title" value={title} onChange={({ target }) => setTitle(target.value)} ></input>
+          <input className='titleInput' type="text" name="title" value={title} onChange={({ target }) => setTitle(target.value)} ></input>
         </div>
         <div>
           author:
-          <input type="text" name="author" value={author} onChange={({ target }) => setAuthor(target.value)} ></input>
+          <input className='authorInput' type="text" name="author" value={author} onChange={({ target }) => setAuthor(target.value)} ></input>
         </div>
         <div>
           url:
-          <input type="text" name="url" value={url} onChange={({ target }) => setUrl(target.value)} ></input>
+          <input className='urlInput' type="text" name="url" value={url} onChange={({ target }) => setUrl(target.value)} ></input>
         </div>
         <button>create</button>
       </form>
