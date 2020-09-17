@@ -27,16 +27,19 @@ describe('Blog app', function() {
               .should('not.contain', 'doguhan logged in')    
         })
     }),
-    it('new blog can be created', function() {
-        cy.get('#username').type('dogu')
-        cy.get('#password').type('123')
-        cy.get('#login-button').click()
-
-        cy.contains('create blog').click()
-        cy.get('#titleId').type('magic title')
-        cy.get('#authorId').type('magic author')
-        cy.get('#urlId').type('magic url')
-        cy.get('#createButtonId').click()
-        cy.contains('a new blog magic title added')
+    describe.only('When logged in', function() {
+        beforeEach(function () {
+            cy.get('#username').type('dogu')
+              .get('#password').type('123')
+              .get('#login-button').click()
+        }),
+        it('A blog can be created', function () {
+            cy.contains('create blog').click()
+              .get('#titleId').type('magic title')
+              .get('#authorId').type('magic author')
+              .get('#urlId').type('magic url')
+              .get('#createButtonId').click()
+            cy.get('.component').should('contain', 'magic title')
+        })
     })
 })
