@@ -10,17 +10,22 @@ describe('Blog app', function() {
         cy.request('post', 'http://localhost:3001/api/users', user)
         cy.visit('http://localhost:3000')
     }),
-    it('login is shown by default', () => {
+    it('login is shown by default', function(){
         cy.get('.loginForm').should('contain', 'Log in to application')
     }),
-    it('front page can be opened', function() {
-        cy.contains('blogs')
-    }),
-    it('login form check', function() {
-        cy.get('#username').type('dogu')
-        cy.get('#password').type('123')
-        cy.get('#login-button').click()
-        cy.contains('doguhan logged in')
+    describe('Login', function(){
+        it('succeeds with correct credentials', function() {
+            cy.get('#username').type('dogu')
+            cy.get('#password').type('123')
+            cy.get('#login-button').click()
+            cy.contains('doguhan logged in')    
+        }),
+        it('fails with correct credentials', function() {
+            cy.get('#username').type('ugod')
+              .get('#password').type('321')
+              .get('#login-button').click()
+              .should('not.contain', 'doguhan logged in')    
+        })
     }),
     it('new blog can be created', function() {
         cy.get('#username').type('dogu')
