@@ -6,12 +6,13 @@ const cors = require('cors')
 const blogRouter = require('./controllers/bloglist')
 const userRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
+const testingRouter = require('./controllers/login')
 const middleware = require('./utils/middleware')
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then( () => logger.info("connected to mongodb"))
-    .catch( (error) => logger.error("error in connection", error.message))
+    .then( () => logger.info('connected to mongodb'))
+    .catch( (error) => logger.error('error in connection', error.message))
 
 const app = express()
 
@@ -23,6 +24,9 @@ app.use(middleware.requestLogger)
 app.use('/', blogRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+if(process.env.NODE_ENV === 'test'){
+    app.use('/api/testing', testingRouter)
+}
 app.use(middleware.unknownendpoint)
 app.use(middleware.errorHandler)
 

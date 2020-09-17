@@ -3,7 +3,6 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, fireEvent } from '@testing-library/react'
 import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
-import userEvent from '@testing-library/user-event'
 
 test('Blog author and title displayed, but url and likes not', () => {
   const blog = {
