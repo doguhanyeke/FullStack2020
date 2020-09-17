@@ -6,7 +6,7 @@ const cors = require('cors')
 const blogRouter = require('./controllers/bloglist')
 const userRouter = require('./controllers/user')
 const loginRouter = require('./controllers/login')
-const testingRouter = require('./controllers/login')
+const testingRouter = require('./controllers/testing_router')
 const middleware = require('./utils/middleware')
 
 const mongoUrl = config.MONGODB_URI

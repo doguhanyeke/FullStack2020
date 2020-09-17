@@ -62,13 +62,13 @@ const App = () => {
       <h3>
         <Notification message={loginMessage}/>
       </h3>
-      <Togglable buttonLabel='login'>
+      <div className='loginForm' >
         <LoginForm
           createLogin={createLogin}
           setLoginMessage={setLoginMessage}
           setUserId={setUserId}
         />
-      </Togglable>
+      </div>
       <h3>
         <Notification message={postMessage}/>
       </h3>

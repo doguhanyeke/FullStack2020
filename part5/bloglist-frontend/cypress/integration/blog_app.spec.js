@@ -1,28 +1,28 @@
 
 describe('Blog app', function() {
     beforeEach(function() {
-        cy.request('post', '/api/testing/reset')
+        cy.request('post', 'http://localhost:3001/api/testing/reset')
         const user = {
-            name: 'tester user',
-            password: 'tester password',
-            username: 'tester username'
+            name: 'doguhan',
+            password: '123',
+            username: 'dogu'
         }
-        cy.request('post', '/api/users', user)
+        cy.request('post', 'http://localhost:3001/api/users', user)
         cy.visit('http://localhost:3000')
-    })
-
+    }),
+    it('login is shown by default', () => {
+        cy.get('.loginForm').should('contain', 'Log in to application')
+    }),
     it('front page can be opened', function() {
         cy.contains('blogs')
     }),
     it('login form check', function() {
-        cy.get('#toggleButton').click()
         cy.get('#username').type('dogu')
         cy.get('#password').type('123')
         cy.get('#login-button').click()
         cy.contains('doguhan logged in')
     }),
     it('new blog can be created', function() {
-        cy.get('#toggleButton').click()
         cy.get('#username').type('dogu')
         cy.get('#password').type('123')
         cy.get('#login-button').click()

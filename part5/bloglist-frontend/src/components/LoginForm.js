@@ -45,13 +45,13 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
   
   return(
     <div>
-      <h2>Log in to application</h2>
       <div style={showWhenUserLoggedIn} >
         {name} logged in
         <button onClick={handleLogOut} >log out</button>
       </div>
 
       <form style={hideWhenUserLoggedIn} onSubmit={handleLogin}>
+        <h2>Log in to application</h2>
         <div>
             username
             <input 
