@@ -1,7 +1,7 @@
-
 describe('Blog app', function() {
     beforeEach(function() {
         cy.request('post', 'http://localhost:3001/api/testing/reset')
+        
         const user = {
             name: 'doguhan',
             password: '123',
@@ -27,6 +27,7 @@ describe('Blog app', function() {
               .should('not.contain', 'doguhan logged in')    
         })
     }),
+    /*
     describe.only('When logged in', function() {
         beforeEach(function () {
             cy.get('#username').type('dogu')
@@ -41,5 +42,29 @@ describe('Blog app', function() {
               .get('#createButtonId').click()
             cy.get('.component').should('contain', 'magic title')
         })
+    })
+    */
+    it('A user can like a blog, naturally', function () {
+        cy.request('post', 'http://localhost:3001/api/login', {
+            username: 'dogu',
+            password: '123'
+        }).then(function(response) {
+            console.log(response)
+            localStorage.setItem('userToken', JSON.stringify(response.body.token))
+        })
+        
+        cy.request({
+            method:'post',
+            url:'http://localhost:3001/api/blogs', 
+            body:{
+                title: 'title',
+                author: 'author',
+                url: 'url'
+            },
+            headers:{
+                'Authorization': `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imlsb3MiLCJpZCI6IjVmNjNiZDgxMzg0MDM2Njg5MzNjMjhjYyIsImlhdCI6MTYwMDM3MjE3Nn0.ATmHVe9WxBDyFil_WBADFecJqrfDif52BJrUgdXQyr8`
+            }
+        })
+        cy.get('.likeButton').click()
     })
 })

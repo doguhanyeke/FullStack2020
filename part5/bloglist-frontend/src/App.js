@@ -82,13 +82,15 @@ const App = () => {
       </div>
 
       <h3> All Blogs</h3>
-      {blogs.sort(compare).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          userId={userId}
-          updateBlogs={updateBlogs} />
-      )}
+      <div className='blogsComponent'>
+        {blogs.sort(compare).map(blog =>
+          <Blog
+            key={blog.id}
+            blog={blog}
+            userId={userId}
+            updateBlogs={updateBlogs} />
+        )}
+      </div>
     </div>
   )
 }
