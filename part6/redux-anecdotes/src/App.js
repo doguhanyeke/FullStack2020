@@ -24,10 +24,14 @@ const App = () => {
     })
   }
 
+  const anecdoteCompare = (anec1, anec2) => {
+    return anec1.votes > anec2.votes ? -1 : 1
+  }
+
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {anecdotes.sort(anecdoteCompare).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
