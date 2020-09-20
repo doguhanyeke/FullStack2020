@@ -30,6 +30,9 @@ const reducer = (state = initialState, action) => {
         ? {...stateElement, votes: stateElement.votes + 1}
         : stateElement)
     }
+    case('CREATE_ANECDOTE'): {
+      return [...state, {...action.data, id: getId() }]
+    }
     default:
     return state
   }
