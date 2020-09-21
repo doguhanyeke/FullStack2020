@@ -1,5 +1,4 @@
 import React from 'react'
-import AnecdoteForm from './AnecdoteForm'
 import { useSelector, useDispatch} from 'react-redux'
 import { voteAction } from '../reducers/anecdoteReducer'
 
