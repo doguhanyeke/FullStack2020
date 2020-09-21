@@ -5,8 +5,14 @@ export const notifMesAction = (message) => {
   }
 }
 
-const defaultMes = ''
-const reducer = (state=defaultMes, action) => {
+export const removeNotifMes = () => {
+  return {
+    type: 'SET_NOTIF_MESSAGE',
+    data: ''
+  }
+}
+
+const reducer = (state='', action) => {
   switch(action.type) {
     case('SET_NOTIF_MESSAGE'): {
       return action.data

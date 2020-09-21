@@ -6,8 +6,6 @@ const Notification = () => {
   const dispatch = useDispatch()
   const notifMes = useSelector(store => store.notificationMessage)
 
-  dispatch(notifMesAction('deneme'))
-
   const style = {
     border: 'solid',
     padding: 10,
