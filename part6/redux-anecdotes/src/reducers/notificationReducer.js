@@ -1,7 +1,12 @@
-export const notifMesAction = (message) => {
-  return {
-    type: 'SET_NOTIF_MESSAGE',
-    data: message
+export const setNotification = (message, timeDuration) => {
+  return async (dispatch) => {
+    dispatch({
+      type: 'SET_NOTIF_MESSAGE',
+      data: message
+    })
+    setTimeout( () => {
+      dispatch(removeNotifMes())
+    }, timeDuration)   
   }
 }
 
