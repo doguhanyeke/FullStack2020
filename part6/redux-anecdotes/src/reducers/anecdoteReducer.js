@@ -51,7 +51,7 @@ const reducer = (state = initialState, action) => {
       return [...state, {...action.data, id: getId() }]
     }
     default:
-    return state
+      return state
   }
 }
 
