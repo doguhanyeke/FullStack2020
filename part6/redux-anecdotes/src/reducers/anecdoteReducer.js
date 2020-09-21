@@ -36,6 +36,13 @@ export const createAnecdoteAction = (content) => {
   }
 }
 
+export const initAnecdotes = (data) => {
+  return {
+    type: 'INIT_ANECDOTES',
+    data: data
+  }
+}
+
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
@@ -49,6 +56,9 @@ const reducer = (state = initialState, action) => {
     }
     case('CREATE_ANECDOTE'): {
       return [...state, {...action.data, id: getId() }]
+    }
+    case('INIT_ANECDOTES'): {
+      return action.data
     }
     default:
       return state
