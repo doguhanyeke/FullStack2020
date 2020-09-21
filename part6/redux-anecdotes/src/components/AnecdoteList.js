@@ -13,8 +13,9 @@ const AnecdoteList = () => {
     return anec1.votes > anec2.votes ? -1 : 1
   }
 
-  const vote = (id, content) => {
-    dispatch(voteAction(id))
+  const vote = ({id, content, votes}) => {
+    console.log("votessss:", id, content, votes)
+    dispatch(voteAction({id, content, votes}))
     dispatch(notifMesAction(`You Voted '${content}'`))
     setTimeout( () => {
       dispatch(removeNotifMes())
@@ -30,7 +31,7 @@ const AnecdoteList = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       )}

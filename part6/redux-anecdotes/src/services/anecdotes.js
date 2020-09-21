@@ -11,7 +11,14 @@ const create = async (anecdote) => {
   return response.data
 }
 
+const vote = async (anecdote) => {
+  console.log("obje", anecdote)
+  const response = await axios.put(`http://localhost:3001/anecdotes/${anecdote.id}`, anecdote)
+  return response.data
+}
+
 export default {
   getAll,
-  create
+  create,
+  vote
 }
