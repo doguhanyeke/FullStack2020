@@ -5,6 +5,8 @@ import { notifMesAction, removeNotifMes } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => state.anecdotes)
+  const filterContent = useSelector(state => state.filter)
+  const filteredAnecdotes = anecdotes.filter(anec => anec.content.includes(filterContent))
   const dispatch = useDispatch()
 
   const anecdoteCompare = (anec1, anec2) => {
@@ -21,7 +23,7 @@ const AnecdoteList = () => {
 
   return (
     <div>
-      {anecdotes.sort(anecdoteCompare).map(anecdote =>
+      {filteredAnecdotes.sort(anecdoteCompare).map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
