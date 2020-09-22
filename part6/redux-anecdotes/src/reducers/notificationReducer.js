@@ -1,10 +1,13 @@
+var timeoutID
+
 export const setNotification = (message, timeDuration) => {
   return async (dispatch) => {
     dispatch({
       type: 'SET_NOTIF_MESSAGE',
       data: message
     })
-    setTimeout( () => {
+    window.clearTimeout(timeoutID)
+    timeoutID = window.setTimeout( () => {
       dispatch(removeNotifMes())
     }, timeDuration)   
   }
