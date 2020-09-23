@@ -4,7 +4,8 @@ import {
   Link,
   Route,
   Switch,
-  useParams
+  useParams,
+  useHistory
 } from 'react-router-dom'
 
 const Anecdote = ({anecdotes}) => {
@@ -59,7 +60,9 @@ const Footer = () => (
   </div>
 )
 
+var timeoutID
 const CreateNew = (props) => {
+  const history = useHistory()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -73,6 +76,15 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    setContent('')
+    setAuthor('')
+    setInfo('')
+    history.push('/')
+    props.setNotification(`a new anectode ${content} created!`)
+    window.clearTimeout(timeoutID)
+    timeoutID = window.setTimeout(() => {
+      props.setNotification('')
+    }, 10000)
   }
 
   return (
@@ -150,13 +162,14 @@ const App = () => {
         <Link style={padding} to='/create'>create new</Link>
         <Link style={padding} to='/about'>about</Link>
       </div>
+      <p>{notification !== '' ? notification : null}</p>
       <div>      
         <Switch>
           <Route path='/anecdotes/:id'>
             <Anecdote anecdotes={anecdotes}/>
           </Route>
           <Route path='/create'>
-            <CreateNew addNew={addNew} />
+            <CreateNew addNew={addNew} setNotification={setNotification}/>
           </Route>
           <Route path='/about'>
             <About />
