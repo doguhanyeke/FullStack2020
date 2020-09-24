@@ -92,21 +92,26 @@ const CreateNew = (props) => {
     info.reset()
   }
 
+  const rest = (obj) => {
+    const {reset, ...restProps} = {...obj}
+    return restProps
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...rest(content)} />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...rest(author)} />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...rest(info)} />
         </div>
         <button>create</button>
       </form>
