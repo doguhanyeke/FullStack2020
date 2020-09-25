@@ -8,6 +8,7 @@ import {
   useHistory
 } from 'react-router-dom'
 import { useField } from './hooks/index'
+import { Table } from 'react-bootstrap'
 
 const Anecdote = ({anecdotes}) => {
   const id = useParams().id
@@ -27,15 +28,22 @@ const Anecdote = ({anecdotes}) => {
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote => 
-        <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`} >
-            {anecdote.content}
-          </Link>
-        </li>
-      )}
-    </ul>
+    <Table striped>
+      <tbody>
+        {anecdotes.map(anecdote => 
+          <tr key={anecdote.id}>
+            <td>
+              <Link to={`/anecdote/${anecdote.id}`}>
+                {anecdote.content}
+              </Link>
+            </td>
+            <td>
+              {anecdote.author}
+            </td>
+          </tr>
+          )}  
+      </tbody>
+    </Table>
   </div>
 )
 
@@ -165,33 +173,33 @@ const App = () => {
   }
 
   return (
-    <div>
-    <h1>Software anecdotes</h1>
-    <Router>
-      <div>
-        <Link style={padding} to='/'>anecdotes</Link>
-        <Link style={padding} to='/create'>create new</Link>
-        <Link style={padding} to='/about'>about</Link>
-      </div>
-      <p>{notification !== '' ? notification : null}</p>
-      <div>      
-        <Switch>
-          <Route path='/anecdotes/:id'>
-            <Anecdote anecdotes={anecdotes}/>
-          </Route>
-          <Route path='/create'>
-            <CreateNew addNew={addNew} setNotification={setNotification}/>
-          </Route>
-          <Route path='/about'>
-            <About />
-          </Route>
-          <Route path='/'>
-            <AnecdoteList anecdotes={anecdotes} />
-          </Route>
-        </Switch>
-        <Footer />
-      </div>
-    </Router>
+    <div className='container'>
+      <h1>Software anecdotes</h1>
+      <Router>
+        <div>
+          <Link style={padding} to='/'>anecdotes</Link>
+          <Link style={padding} to='/create'>create new</Link>
+          <Link style={padding} to='/about'>about</Link>
+        </div>
+        <p>{notification !== '' ? notification : null}</p>
+        <div>      
+          <Switch>
+            <Route path='/anecdotes/:id'>
+              <Anecdote anecdotes={anecdotes}/>
+            </Route>
+            <Route path='/create'>
+              <CreateNew addNew={addNew} setNotification={setNotification}/>
+            </Route>
+            <Route path='/about'>
+              <About />
+            </Route>
+            <Route path='/'>
+              <AnecdoteList anecdotes={anecdotes} />
+            </Route>
+          </Switch>
+          <Footer />
+        </div>
+      </Router>
     </div>
   )
 }
