@@ -33,7 +33,7 @@ const AnecdoteList = ({ anecdotes }) => (
         {anecdotes.map(anecdote => 
           <tr key={anecdote.id}>
             <td>
-              <Link to={`/anecdote/${anecdote.id}`}>
+              <Link to={`/anecdotes/${anecdote.id}`}>
                 {anecdote.content}
               </Link>
             </td>
