@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, userId }) => {
+const Blog = ({ blog, userId, returnNewBlog }) => {
   const dispatch = useDispatch()
 
   const [detailVisible, setdetailVisible] = useState(false)
-  const [currentBlog, setCurrentBlog] = useState(blog)
 
   const blogStyle = {
-    display: currentBlog.id !== '' ? '' : 'none',
+    display: blog.id !== '' ? '' : 'none',
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
@@ -21,57 +20,37 @@ const Blog = ({ blog, userId }) => {
   const showDetails = { display: detailVisible ? '' : 'none' }
 
   const increaseLikeofBlog = async () => {
-    const newBlog = {
-      user: currentBlog.user ? currentBlog.user._id : '',
-      likes: currentBlog.likes ?  + currentBlog.likes + 1 : 1,
-      author: currentBlog.author,
-      title: currentBlog.title,
-      url: currentBlog.url,
-      id: currentBlog.id
-    }
-    setCurrentBlog(newBlog)
-    dispatch(updateBlog(newBlog))
+     dispatch(updateBlog({...blog, likes: blog.likes + 1}))
   }
 
   const handleRemoveBlog = async () => {
-    if (window.confirm(`Remove blog ${currentBlog.title} by ${currentBlog.author}`)){
-      dispatch(removeBlog(currentBlog.id))
-      setCurrentBlog({
-        title: '',
-        author: '',
-        url: '',
-        likes: 0,
-        user: {
-          username: '',
-          name: '',
-          id: ''
-        },
-        id: ''
-      })
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)){
+      dispatch(removeBlog(blog.id))
       setdetailVisible(false)
     }
   }
 
-  console.log("current blog", currentBlog)
+  const currentBlog = returnNewBlog(blog.id)
+  console.log("oba", currentBlog)
   const removeStyle = {
-    display: currentBlog.user && userId === currentBlog.user.id ? '' : 'none'
+    display: currentBlog.user && userId === currentBlog.user ? '' : 'none'
   }
 
   return(
     <div style={blogStyle} className='blog'>
-      {currentBlog.title} {currentBlog.author}
+      {blog.title} {blog.author}
       <button className='viewHideButton' onClick={() => setdetailVisible(!detailVisible)}>{detailVisible ? 'hide' : 'view'}</button>
       <div className='blog-details' style={showDetails}>
         <ul>
           <li className='url-li' >
-            {currentBlog.url}
+            {blog.url}
           </li>
           <li className='likes-li' >
-            {currentBlog.likes}
+            {blog.likes}
             <button className='likeButton' onClick={increaseLikeofBlog}>like</button>
           </li>
           <li>
-            {currentBlog.user ? currentBlog.user.name : null}
+            {blog.user ? blog.user.name : null}
           </li>
           <div style={removeStyle}>
             <button onClick={handleRemoveBlog}>remove</button>

@@ -16,6 +16,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
+
   const blogs = useSelector(state => state.blogs)
   console.log("blogs", blogs)
 
@@ -47,6 +48,9 @@ const App = () => {
   */
   const showCreateFormWhenUserAvailable = { display: userId !== '' ? '' : 'none' }
 
+  const returnNewBlog = (id) => {
+    return blogs.find(blog => blog.id === id)
+  }
   console.log("state: ", useSelector(state => state))
   return (
     <div className='component' >
@@ -76,7 +80,8 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            userId={userId} />
+            userId={userId}
+            returnNewBlog={returnNewBlog} />
         )}
       </div>
     </div>
