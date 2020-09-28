@@ -1,8 +1,9 @@
 import React, { useState } from 'react' 
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
+import { setUserID } from '../reducers/userReducer'
 
-const LoginForm = ({createLogin, setUserId, setLoginMessage}) => {
+const LoginForm = ({createLogin, setLoginMessage}) => {
   const dispatch = useDispatch()
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -18,7 +19,7 @@ const LoginForm = ({createLogin, setUserId, setLoginMessage}) => {
       window.localStorage.setItem("userToken", `bearer ${response.token.toString()}`)
       setName(response.name)
       dispatch(setLoginMessage('Login successful'))
-      setUserId(response.id)
+      dispatch(setUserID(response.id))
       setTimeout(() => {
         dispatch(setLoginMessage(''))
       }, 5000)
@@ -33,7 +34,7 @@ const LoginForm = ({createLogin, setUserId, setLoginMessage}) => {
 
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
-    setUserId('')
+    dispatch(setUserID(''))
     setUserName('')
     setPassword('')
     dispatch(setLoginMessage(`Logged out`))
@@ -78,8 +79,7 @@ const LoginForm = ({createLogin, setUserId, setLoginMessage}) => {
 }
 
 LoginForm.propTypes = {
-  createLogin: PropTypes.func.isRequired,
-  setUserId: PropTypes.func.isRequired
+  createLogin: PropTypes.func.isRequired
 }
 
 export default LoginForm

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
@@ -11,14 +11,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
   const dispatch = useDispatch()
-  const [userId, setUserId] = useState('')
+  const userId = useSelector(state => state.userID)
 
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
 
   const blogs = useSelector(state => state.blogs)
-  console.log("blogs", blogs)
 
   useEffect(() => {
     window.localStorage.removeItem('userToken')
@@ -61,7 +60,6 @@ const App = () => {
       <div className='loginForm' >
         <LoginForm
           createLogin={handleLogin}
-          setUserId={setUserId}
           setLoginMessage={setNotificationMessage}
         />
       </div>

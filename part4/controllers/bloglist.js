@@ -5,7 +5,7 @@ require('express-async-errors')
 const jwt = require('jsonwebtoken')
 
 blogRouter.get('/api/blogs', async (request, response) => {
-    const blogs = await Blog.find({}).populate('user', {blogs: 0})
+    const blogs = await Blog.find({}).populate('user', { blogs: 0 })
     response.json(blogs)
 })
 
@@ -45,11 +45,14 @@ blogRouter.post('/api/blogs', async (request, response) => {
     })
 
     const savedBlog = await blog.save()
+    console.log('savedBlog', savedBlog)
 
     user.blogs = user.blogs.concat(savedBlog._id)
     await User.findByIdAndUpdate(user._id, user, { new: true })
 
-    return response.status(201).json(savedBlog)
+    const returnedBlog = await Blog.findById(savedBlog.id)
+    console.log('returnedBlog', returnedBlog)
+    return response.status(201).json(returnedBlog)
 })
 
 blogRouter.delete('/api/blogs/:id', async (req, res) => {

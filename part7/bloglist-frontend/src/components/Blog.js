@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, userId, returnNewBlog }) => {
+const Blog = ({ blog, returnNewBlog }) => {
   const dispatch = useDispatch()
+  const userId = useSelector(state => state.userID)
 
   const [detailVisible, setdetailVisible] = useState(false)
 
@@ -29,11 +30,11 @@ const Blog = ({ blog, userId, returnNewBlog }) => {
       setdetailVisible(false)
     }
   }
-
+  
   const currentBlog = returnNewBlog(blog.id)
-  console.log("oba", currentBlog)
+  const currentBlogUser = currentBlog.user.id ? currentBlog.user.id : currentBlog.user
   const removeStyle = {
-    display: currentBlog.user && userId === currentBlog.user ? '' : 'none'
+    display: userId === currentBlogUser ? '' : 'none'
   }
 
   return(

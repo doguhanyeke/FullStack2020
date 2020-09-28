@@ -8,12 +8,14 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import { applyMiddleware, createStore } from 'redux'
 import blogReducer from './reducers/blogReducer'
+import userReducer from './reducers/userReducer'
 
 const reducer = (state={}, action) => {
   return {
     notificationMessage: notificationReducer(state.notificationMessage, action),
     blogForm: createFormReducer(state.blogForm, action),
-    blogs: blogReducer(state.blogs, action)
+    blogs: blogReducer(state.blogs, action),
+    userID: userReducer(state.userID, action)
   }
 }
 const store = createStore(
