@@ -4,41 +4,32 @@ import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
-import blogService from './services/blogs'
 import axios from 'axios'
 import { setNotificationMessage } from './reducers/notificationReducer'
-import { useSelector } from 'react-redux'
+import { initBlogs, addBlog } from './reducers/blogReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  const dispatch = useDispatch()
   const [userId, setUserId] = useState('')
 
   useEffect(() => {
-    blogService
-      .getAll()
-      .then(blogs => setBlogs( blogs )
-      )
-  }, [])
+    dispatch(initBlogs())
+  }, [dispatch])
+  const blogs = useSelector(state => state.blogs)
+  console.log("blogs", blogs)
 
   useEffect(() => {
     window.localStorage.removeItem('userToken')
   }, [])
 
-  const createLogin = async (userInfo) => {
+  const handleLogin = async (userInfo) => {
     const response = await axios.post('/api/login', userInfo)
     return response.data
   }
 
-  const updateBlogs = (blog) => {
-    setBlogs(blogs.map(b => b.id === blog.id ? blog : b))
-  }
-
-  const createNewNote = async (newNote) => {
-    const config = {
-      headers: { Authorization: window.localStorage.getItem('userToken') }
-    }
-    const response = await axios.post('/api/blogs', newNote, config)
-    setBlogs(blogs.concat(response.data))
+  const createNewNote = (newBlog) => {
+    dispatch(addBlog(newBlog))
   }
 
   /*
@@ -65,7 +56,7 @@ const App = () => {
       </h3>
       <div className='loginForm' >
         <LoginForm
-          createLogin={createLogin}
+          createLogin={handleLogin}
           setUserId={setUserId}
           setLoginMessage={setNotificationMessage}
         />
@@ -85,8 +76,7 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            userId={userId}
-            updateBlogs={updateBlogs} />
+            userId={userId} />
         )}
       </div>
     </div>

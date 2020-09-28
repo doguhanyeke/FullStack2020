@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { updateBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, userId, updateBlogs }) => {
+const Blog = ({ blog, userId }) => {
+  const dispatch = useDispatch()
+
   const [detailVisible, setdetailVisible] = useState(false)
   const [currentBlog, setCurrentBlog] = useState(blog)
 
@@ -25,21 +28,13 @@ const Blog = ({ blog, userId, updateBlogs }) => {
       title: currentBlog.title,
       url: currentBlog.url
     }
-    const config = {
-      headers: { Authorization: window.localStorage.getItem('userToken') }
-    }
-    const response = await axios.put(`/api/blogs/${currentBlog.id}`, newBlog, config)
-    updateBlogs(response.data)
-    setCurrentBlog(response.data)
+    setCurrentBlog(newBlog)
+    dispatch(updateBlog(newBlog))
   }
 
   const handleRemoveBlog = async () => {
     if (window.confirm(`Remove blog ${currentBlog.title} by ${currentBlog.author}`)){
-      const config = {
-        headers: { Authorization: window.localStorage.getItem('userToken') }
-      }
-      const response = await axios.delete(`/api/blogs/${currentBlog.id}`, config)
-      console.log(response.data)
+      dispatch(removeBlog(currentBlog.id))
       setCurrentBlog({
         title: '',
         author: '',
@@ -56,6 +51,7 @@ const Blog = ({ blog, userId, updateBlogs }) => {
     }
   }
 
+  console.log("current blog", currentBlog)
   const removeStyle = {
     display: currentBlog.user && userId === currentBlog.user.id ? '' : 'none'
   }
