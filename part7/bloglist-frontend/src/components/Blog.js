@@ -26,7 +26,8 @@ const Blog = ({ blog, userId }) => {
       likes: currentBlog.likes ?  + currentBlog.likes + 1 : 1,
       author: currentBlog.author,
       title: currentBlog.title,
-      url: currentBlog.url
+      url: currentBlog.url,
+      id: currentBlog.id
     }
     setCurrentBlog(newBlog)
     dispatch(updateBlog(newBlog))
