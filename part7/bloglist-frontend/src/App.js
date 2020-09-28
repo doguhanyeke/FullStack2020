@@ -6,11 +6,11 @@ import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import axios from 'axios'
+import { setNotificationMessage } from './reducers/notificationReducer'
+import { useSelector } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [loginMessage, setLoginMessage] = useState('')
-  const [postMessage, setPostMessage] = useState('')
   const [userId, setUserId] = useState('')
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const App = () => {
       .getAll()
       .then(blogs => setBlogs( blogs )
       )
-  }, [postMessage])
+  }, [])
 
   useEffect(() => {
     window.localStorage.removeItem('userToken')
@@ -56,27 +56,25 @@ const App = () => {
   */
   const showCreateFormWhenUserAvailable = { display: userId !== '' ? '' : 'none' }
 
+  console.log("state: ", useSelector(state => state))
   return (
     <div className='component' >
       <h1>blogs</h1>
       <h3>
-        <Notification message={loginMessage}/>
+        <Notification message={useSelector(state => state.notificationMessage)}/>
       </h3>
       <div className='loginForm' >
         <LoginForm
           createLogin={createLogin}
-          setLoginMessage={setLoginMessage}
           setUserId={setUserId}
+          setLoginMessage={setNotificationMessage}
         />
       </div>
-      <h3>
-        <Notification message={postMessage}/>
-      </h3>
       <div style={showCreateFormWhenUserAvailable}>
         <Togglable buttonLabel='create blog'>
           <CreateForm
             createNewNote={createNewNote}
-            setPostMessage={setPostMessage}
+            setBlogPostMessage={setNotificationMessage}
           />
         </Togglable>
       </div>

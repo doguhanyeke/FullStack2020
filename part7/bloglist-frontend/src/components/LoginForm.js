@@ -1,7 +1,9 @@
 import React, { useState } from 'react' 
 import PropTypes from 'prop-types'
-    
-const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
+import { useDispatch } from 'react-redux'
+
+const LoginForm = ({createLogin, setUserId, setLoginMessage}) => {
+  const dispatch = useDispatch()
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -15,10 +17,10 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
       })
       window.localStorage.setItem("userToken", `bearer ${response.token.toString()}`)
       setName(response.name)
-      setLoginMessage('Login successful')
+      dispatch(setLoginMessage('Login successful'))
       setUserId(response.id)
       setTimeout(() => {
-        setLoginMessage('')
+        dispatch(setLoginMessage(''))
       }, 5000)
 
       setUserName('')
@@ -34,9 +36,9 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
     setUserId('')
     setUserName('')
     setPassword('')
-    setLoginMessage(`Logged out`)
+    dispatch(setLoginMessage(`Logged out`))
     setTimeout(() => {
-      setLoginMessage('')
+      dispatch(setLoginMessage(''))
     }, 5000)
   }
 
@@ -77,7 +79,6 @@ const LoginForm = ({createLogin, setLoginMessage, setUserId}) => {
 
 LoginForm.propTypes = {
   createLogin: PropTypes.func.isRequired,
-  setLoginMessage: PropTypes.func.isRequired,
   setUserId: PropTypes.func.isRequired
 }
 
