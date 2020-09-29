@@ -48,6 +48,5 @@
     "cypress": "^5.2.0",
     "eslint-plugin-cypress": "^2.11.1",
     "eslint-plugin-jest": "^24.0.1"
-  },
-  "proxy": "http://localhost:3001"
+  }
 }

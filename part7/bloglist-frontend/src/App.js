@@ -34,7 +34,7 @@ const App = () => {
   }, [])
 
   const handleLogin = async (userInfo) => {
-    const response = await axios.post('/api/login', userInfo)
+    const response = await axios.post('http://localhost:3001/api/login', userInfo)
     return response.data
   }
 
