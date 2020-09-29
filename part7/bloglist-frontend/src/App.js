@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import BlogView from './components/BlogView'
+import Blog from './components/Blog'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -68,15 +69,20 @@ const App = () => {
     return blogs.find(blog => blog.id === id)
   }
 
-  const match = useRouteMatch('/users/:id')
+  let match = useRouteMatch('/users/:id')
   const oneUser = match 
     ? users.find(user => user.id === match.params.id)
+    : null
+
+  match = useRouteMatch('/blogs/:id')
+  const oneBlog = match
+    ? blogs.find(blog => blog.id === match.params.id)
     : null
 
   console.log("state: ", useSelector(state => state))
   return (
     <div className='container' >
-      <h1>blogs</h1>
+      <h1>Blogs</h1>
       <h3>
         <Notification message={useSelector(state => state.notificationMessage)}/>
       </h3>
@@ -102,10 +108,10 @@ const App = () => {
           <Route exact path='/users'>
             <Users users={users} />
           </Route>
-          <Route path='/blogs/:id'>
-
+          <Route exact path='/blogs/:id'>
+            <Blog blog={oneBlog}/>
           </Route>
-          <Route exact path='/blogs'>
+          <Route exact path='/'>
             <h3> All Blogs</h3>
             <div className='blogsComponent'>
               {blogs.sort(compare).map(blog =>
@@ -118,6 +124,7 @@ const App = () => {
             </div>
           </Route>
         </Switch>
+        
     </div>
   )
 }
