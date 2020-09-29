@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Blog from './components/Blog'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
@@ -8,14 +8,24 @@ import axios from 'axios'
 import { setNotificationMessage } from './reducers/notificationReducer'
 import { initBlogs, addBlog } from './reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
+import Users from './components/Users'
+import userService from './services/users'
 
 const App = () => {
   const dispatch = useDispatch()
   const userId = useSelector(state => state.userID)
+  const [users, setUsers] = useState([])
 
   useEffect(() => {
     dispatch(initBlogs())
   }, [dispatch])
+
+  useEffect(() => {
+    userService.getAll().then(users => {
+      setUsers(users)
+      console.log("hio", users)
+    }).catch(error => console.log("err", error))
+  }, [])
 
   const blogs = useSelector(state => state.blogs)
 
@@ -52,7 +62,7 @@ const App = () => {
   }
   console.log("state: ", useSelector(state => state))
   return (
-    <div className='component' >
+    <div className='container' >
       <h1>blogs</h1>
       <h3>
         <Notification message={useSelector(state => state.notificationMessage)}/>
@@ -71,6 +81,10 @@ const App = () => {
           />
         </Togglable>
       </div>
+      <div>
+        <Users users={users} />
+      </div>
+
 
       <h3> All Blogs</h3>
       <div className='blogsComponent'>

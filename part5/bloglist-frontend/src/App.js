@@ -16,7 +16,7 @@ const App = () => {
   useEffect(() => {
     blogService
       .getAll()
-      .then(blogs => setBlogs( blogs )
+      .then(blogs => setBlogs( blogs.users )
       )
   }, [postMessage])
 
