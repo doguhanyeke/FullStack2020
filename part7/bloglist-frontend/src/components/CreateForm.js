@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { setTitle, setAuthor, setUrl } from '../reducers/createFormReducer'
+import { Button } from 'react-bootstrap'
 
 const CreateForm = ({ createNewNote, setBlogPostMessage }) => {
   const dispatch = useDispatch()
@@ -51,7 +52,7 @@ const CreateForm = ({ createNewNote, setBlogPostMessage }) => {
           url:
           <input id='urlId' className='urlInput' type="text" name="url" value={url} onChange={({ target }) => dispatch(setUrl(target.value))} ></input>
         </div>
-        <button id='createButtonId' >create</button>
+        <Button type='submit' id='createButtonId' >create</Button>
       </form>
     </div>
   )

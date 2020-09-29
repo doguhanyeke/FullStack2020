@@ -1,6 +1,6 @@
 import React from 'react'
-import blogReducer from '../reducers/blogReducer'
-import { Table, Link, Route } from 'react-bootstrap'
+import { Table } from 'react-bootstrap'
+import { BrowserRouter as Router, Link} from 'react-router-dom'
 
 const Users = ({ users }) => {
   console.log("users:", users)
@@ -28,7 +28,11 @@ const Users = ({ users }) => {
         {users.map(user => (
           <tr key={user.id}>
             <td>
-              {user.name}
+              <Router>
+                <Link to={`/users/${user.id}`}>
+                  {user.name}
+                </Link>
+              </Router>
             </td>
             <td>
               {user.blogs.length}

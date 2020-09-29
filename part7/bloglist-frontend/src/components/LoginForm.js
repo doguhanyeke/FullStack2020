@@ -51,10 +51,10 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
     <div>
       <div style={showWhenUserLoggedIn} >
         {name} logged in
-        <button onClick={handleLogOut} >log out</button>
+        <Button type='submit' onClick={handleLogOut} >log out</Button>
       </div>
 
-      <h2>Log in to application</h2>
+      <h3>Log in to application</h3>
       <Form style={hideWhenUserLoggedIn} onSubmit={handleLogin}>
         <FormGroup>
           <FormLabel>username</FormLabel>
@@ -71,7 +71,7 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
             value={password} 
             onChange={({target}) => setPassword(target.value)}
           />
-          <Button type='submit' id='login-button'>
+          <Button variant='primary' type='submit' id='login-button'>
              login 
           </Button>
         </FormGroup>

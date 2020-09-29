@@ -9,6 +9,7 @@ import thunk from 'redux-thunk'
 import { applyMiddleware, createStore } from 'redux'
 import blogReducer from './reducers/blogReducer'
 import userReducer from './reducers/userReducer'
+import { BrowserRouter as Router } from 'react-router-dom'
 
 const reducer = (state={}, action) => {
   return {
@@ -26,6 +27,8 @@ const store = createStore(
 )
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App/>
-  </Provider>, document.getElementById('root'))
+  <Router>
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  </Router>, document.getElementById('root'))
