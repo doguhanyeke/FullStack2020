@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { setUserID } from '../reducers/userReducer'
+import { Form, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
 
 const LoginForm = ({createLogin, setLoginMessage}) => {
   const dispatch = useDispatch()
@@ -53,27 +54,28 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
         <button onClick={handleLogOut} >log out</button>
       </div>
 
-      <form style={hideWhenUserLoggedIn} onSubmit={handleLogin}>
-        <h2>Log in to application</h2>
-        <div>
-            username
-            <input 
+      <h2>Log in to application</h2>
+      <Form style={hideWhenUserLoggedIn} onSubmit={handleLogin}>
+        <FormGroup>
+          <FormLabel>username</FormLabel>
+          <FormControl 
             id='username'
             type='text' 
             value={username} 
-            onChange={({target}) => {setUserName(target.value)}} ></input>
-        </div>
-        <div>
-            password
-            <input 
+            onChange={({target}) => {setUserName(target.value)}} 
+          />
+          <FormLabel>password</FormLabel>
+          <FormControl
             id='password'
             type='password'
             value={password} 
-            onChange={({target}) => setPassword(target.value)} >
-            </input>
-        </div>
-        <button id='login-button'> login </button>
-      </form>
+            onChange={({target}) => setPassword(target.value)}
+          />
+          <Button type='submit' id='login-button'>
+             login 
+          </Button>
+        </FormGroup>
+      </Form>
     </div>
   )
 }

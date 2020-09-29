@@ -1,6 +1,6 @@
 import React from 'react'
 import blogReducer from '../reducers/blogReducer'
-import { Table } from 'react-bootstrap'
+import { Table, Link, Route } from 'react-bootstrap'
 
 const Users = ({ users }) => {
   console.log("users:", users)
