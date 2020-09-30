@@ -1,5 +1,4 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
 
 const User = ({ user }) => {
   if(!user){
@@ -13,13 +12,14 @@ const User = ({ user }) => {
       <h3>
         added blogs
       </h3>
-      <div>
+      <ul>
         {user.blogs.map(blog => 
         <li key={blog.id} >{blog.title}</li>
         )}
-      </div>
+      </ul>
     </div>
   )
 }
+
 
 export default User

@@ -5,9 +5,9 @@ const Notification = ({ message }) => {
   console.log("eski mesaj", message)
   if(message !== ''){
     return (
-      <div>
+      <p>
         {message}
-      </div>
+      </p>
     )
   }
   return(null)

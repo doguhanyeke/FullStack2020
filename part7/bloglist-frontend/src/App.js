@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { 
+  BrowserRouter as Router,
+  Route,
+  useRouteMatch,
+  Switch,
+  Link,
+} from 'react-router-dom'
+
 import BlogView from './components/BlogView'
 import Blog from './components/Blog'
 import CreateForm from './components/CreateForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
-import axios from 'axios'
+import User from './components/User'
+import Users from './components/Users'
+
 import { setNotificationMessage } from './reducers/notificationReducer'
 import { initBlogs, addBlog } from './reducers/blogReducer'
-import { useDispatch, useSelector } from 'react-redux'
-import Users from './components/Users'
+
 import userService from './services/users'
-import { 
-  BrowserRouter as Router,
-  Route,
-  useRouteMatch
-} from 'react-router-dom'
-import User from './components/User'
-import Switch from 'react-bootstrap/esm/Switch'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -100,31 +104,31 @@ const App = () => {
           />
         </Togglable>
       </div>
-      
-        <Switch>
-          <Route exact path='/users/:id'>
-            <User user={oneUser} />
-          </Route>
-          <Route exact path='/users'>
-            <Users users={users} />
-          </Route>
-          <Route exact path='/blogs/:id'>
-            <Blog blog={oneBlog}/>
-          </Route>
-          <Route exact path='/'>
-            <h3> All Blogs</h3>
-            <div className='blogsComponent'>
-              {blogs.sort(compare).map(blog =>
-                <BlogView
-                  key={blog.id}
-                  blog={blog}
-                  userId={userId}
-                  returnNewBlog={returnNewBlog} />
-              )}
-            </div>
-          </Route>
-        </Switch>
-        
+      <div>
+      <Switch>
+        <Route path='/users/:id'>
+          <User user={oneUser} />
+        </Route>
+        <Route path='/users'>
+          <Users users={users} />  
+        </Route>
+        <Route path='/blogs/:id'>
+          <Blog blog={oneBlog}/>
+        </Route>
+        <Route exact path='/'>
+          <h3> All Blogs</h3>
+          <div className='blogsComponent'>
+            {blogs.sort(compare).map(blog =>
+              <BlogView
+                key={blog.id}
+                blog={blog}
+                userId={userId}
+                returnNewBlog={returnNewBlog} />
+            )}
+          </div>
+        </Route>
+      </Switch>
+      </div>
     </div>
   )
 }

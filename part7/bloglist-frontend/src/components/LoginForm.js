@@ -50,7 +50,7 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
   return(
     <div>
       <div style={showWhenUserLoggedIn} >
-        <p>{name} logged in</p>
+        <em>{name} logged in</em>
         <Button type='submit' onClick={handleLogOut} >log out</Button>
       </div>
       
