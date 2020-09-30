@@ -1,10 +1,10 @@
-import React, { useState } from 'react' 
+import React, { useState, useImperativeHandle } from 'react' 
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { setUserID } from '../reducers/userReducer'
 import { Form, FormControl, FormGroup, FormLabel, Button } from 'react-bootstrap'
 
-const LoginForm = ({createLogin, setLoginMessage}) => {
+const LoginForm = React.forwardRef(({createLogin, setLoginMessage}, ref) => {
   const dispatch = useDispatch()
   const [username, setUserName] = useState('')
   const [password, setPassword] = useState('')
@@ -18,6 +18,7 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
         password: password
       })
       window.localStorage.setItem("userToken", `bearer ${response.token.toString()}`)
+      window.localStorage.setItem("nameOfUser", `${response.name.toString()}`)
       setName(response.name)
       dispatch(setLoginMessage('Login successful'))
       dispatch(setUserID(response.id))
@@ -33,8 +34,16 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
     }
   }
 
+  useImperativeHandle(ref, () => {
+    return {
+      handleLogOut,
+      name
+    }
+  })
+
   const handleLogOut = () => {
     window.localStorage.removeItem('userToken')
+    window.localStorage.removeItem('nameOfUser')
     dispatch(setUserID(''))
     setUserName('')
     setPassword('')
@@ -49,11 +58,6 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
   
   return(
     <div>
-      <div style={showWhenUserLoggedIn} >
-        <em>{name} logged in</em>
-        <Button type='submit' onClick={handleLogOut} >log out</Button>
-      </div>
-      
       <Form style={hideWhenUserLoggedIn} onSubmit={handleLogin}>
       <h3>Log in to application</h3>
         <FormGroup>
@@ -78,7 +82,7 @@ const LoginForm = ({createLogin, setLoginMessage}) => {
       </Form>
     </div>
   )
-}
+})
 
 LoginForm.propTypes = {
   createLogin: PropTypes.func.isRequired

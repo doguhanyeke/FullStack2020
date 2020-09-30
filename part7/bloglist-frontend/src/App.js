@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { useDispatch, useSelector } from 'react-redux'
 import { 
@@ -8,6 +8,7 @@ import {
   Switch,
   Link,
 } from 'react-router-dom'
+import { Button } from 'react-bootstrap'
 
 import BlogView from './components/BlogView'
 import Blog from './components/Blog'
@@ -84,17 +85,31 @@ const App = () => {
     : null
 
   console.log("state: ", useSelector(state => state))
+  const loginFormRef = useRef(null)
   return (
     <div className='container' >
+      <div>
+      <Link style={{padding: 5}} to='/users'>
+        users
+      </Link >
+      <Link style={{padding: 5}} to='/blogs'>
+        blogs
+      </Link>
+      {window.localStorage.getItem('userToken') 
+        ? (
+          <div>
+            <em>{loginFormRef.current && loginFormRef.current.name} logged in</em>
+            <button onClick={loginFormRef.current && loginFormRef.current.handleLogOut} >logout</button>
+          </div>
+          )
+        : <Link style={{padding: 5}} to='/login'>login</Link>}
+      </div>
       <h1>Blogs</h1>
       <h3>
         <Notification message={useSelector(state => state.notificationMessage)}/>
       </h3>
       <div className='loginForm' >
-        <LoginForm
-          createLogin={handleLogin}
-          setLoginMessage={setNotificationMessage}
-        />
+        
       </div>
       <div style={showCreateFormWhenUserAvailable}>
         <Togglable buttonLabel='create blog'>
@@ -105,7 +120,15 @@ const App = () => {
         </Togglable>
       </div>
       <div>
+      
       <Switch>
+        <Route path='/login'>
+          <LoginForm
+            createLogin={handleLogin}
+            setLoginMessage={setNotificationMessage}
+            ref={loginFormRef}
+          />
+        </Route>
         <Route path='/users/:id'>
           <User user={oneUser} />
         </Route>
@@ -115,7 +138,7 @@ const App = () => {
         <Route path='/blogs/:id'>
           <Blog blog={oneBlog}/>
         </Route>
-        <Route exact path='/'>
+        <Route exact path='/blogs'>
           <h3> All Blogs</h3>
           <div className='blogsComponent'>
             {blogs.sort(compare).map(blog =>
