@@ -106,4 +106,13 @@ blogRouter.put('/api/blogs/:id', async (req, res) => {
     res.json(result)
 })
 
+blogRouter.post('/api/blogs/:id/comments', async (req,res) => {
+    const comment = req.body.comment
+    const blogId = req.params.id
+    const blog = await Blog.findById(blogId)
+    blog.comments = blog.comments.concat(comment)
+    const savedBlog = await blog.save()
+    return res.json(savedBlog)
+})
+
 module.exports = blogRouter

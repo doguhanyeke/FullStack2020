@@ -22,6 +22,12 @@ const Blog = ({ blog }) => {
       {blog.likes} likes
       <button onClick={increaseLikeofBlog}>like</button>
       <p>{blog.user ? blog.user.name : null}</p>
+      <p>comments</p>
+      <ul>
+        {blog.comments.map(comment =>
+        <li key={blog.id}>{comment}</li>
+        )}
+      </ul>
     </div>
   )
 }
