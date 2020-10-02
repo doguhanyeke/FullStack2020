@@ -83,6 +83,7 @@ const typeDefs = gql`
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book]!
+    allAuthors: [Author]!
   }
   type Book {
     title: String!
@@ -90,6 +91,11 @@ const typeDefs = gql`
     author: String!
     id: ID!
     genres: [String]!
+  }
+  type Author {
+    name: String!
+    id: ID!
+    born: Int
   }
 `
 
@@ -103,8 +109,11 @@ const resolvers = {
     },
     allBooks: () => {
       return books
+    },
+    allAuthors: () => {
+      return authors
     }
-  }
+   }
 }
 
 const server = new ApolloServer({
