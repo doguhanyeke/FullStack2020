@@ -83,7 +83,7 @@ const typeDefs = gql`
   type Mutation {
     addBook(
       title: String!
-      author: String
+      author: String!
       published: Int!
       genres: [String]!
     ): Book
@@ -117,7 +117,7 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
-      
+      console.log("add book")
       isAuthorExist = authors.reduce((isExist, author) => {
         isExist = args.author === author.name ? true : (isExist || false)
         return isExist
@@ -134,6 +134,7 @@ const resolvers = {
       return book
     },
     editAuthor: (root, args) => {
+      console.log("edit", args)
       const returnedAuthor = authors.find(author => author.name === args.name)
       if(returnedAuthor){
         returnedAuthor.born = args.setBornTo
