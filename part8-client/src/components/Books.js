@@ -5,7 +5,10 @@ const Books = (props) => {
     return null
   }
 
-  const books = []
+  let books = []
+  if(props.books){
+    books = props.books
+  }
 
   return (
     <div>
