@@ -150,7 +150,8 @@ const resolvers = {
     authorCount: () => {
       return authors.length
     },
-    allBooks: (root, args) => {      
+    allBooks: (root, args) => {   
+      console.log("All books entered")   
       if(args.length !== 0){
         if(args.author && args.genre){
           return (books.filter(book => book.author === args.author && book.genres.includes(args.genre)))
