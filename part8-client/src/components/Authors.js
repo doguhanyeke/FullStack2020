@@ -1,12 +1,23 @@
-import { useMutation } from '@apollo/client'
+import { useMutation, gql } from '@apollo/client'
 import React from 'react'
-import { EDIT_BIRTHYEAR } from '../Queries'
+import { ALL_AUTHORS } from '../Queries'
+
+const EDIT_BIRTHYEAR = gql`
+  mutation EditBirthyearByYear($name: String!, $setBornTo: Int!) {
+    editAuthor(
+      name: $name,
+      setBornTo: $setBornTo
+    ) {
+      name
+      born
+      id
+    }
+  }
+`
 
 const Authors = (props) => {
-  const [editBirthYear, {called, data, loading, response}] = useMutation(EDIT_BIRTHYEAR, {
-    onError: (error) => {
-      console.log("error", error, response)
-    }
+  const [editBirthYear, { data }] = useMutation(EDIT_BIRTHYEAR, {
+    refetchQueries: [{ query: ALL_AUTHORS }]
   })
   if (!props.show) {
     return null
@@ -20,14 +31,13 @@ const Authors = (props) => {
   const submit = (event) => {
     event.preventDefault()
     
-    editBirthYear({
+    editBirthYear( {
       variables: {
-          name: event.target.name.value,
-          setBornTo: event.target.born.value
-        
-    }}).then(res => console.log("oho", res))
-    .catch(err => console.error("heyo", err))
-    console.log("data:", data, called, loading, response)
+        name: event.target.name.value,
+        setBornTo: Number(event.target.born.value)
+      }
+    })
+    console.log("data:", data)
 
     event.target.name.value = ''
     event.target.born.value = ''
