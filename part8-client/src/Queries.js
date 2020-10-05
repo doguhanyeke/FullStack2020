@@ -48,5 +48,5 @@ export const EDIT_BIRTHYEAR = gql`
       born
       id
     }
-}
+  }
 `

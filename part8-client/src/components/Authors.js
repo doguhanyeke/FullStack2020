@@ -1,30 +1,36 @@
-  
 import { useMutation } from '@apollo/client'
 import React from 'react'
 import { EDIT_BIRTHYEAR } from '../Queries'
 
 const Authors = (props) => {
-  const [editBirthYear] = useMutation(EDIT_BIRTHYEAR)
+  const [editBirthYear, {called, data, loading, response}] = useMutation(EDIT_BIRTHYEAR, {
+    onError: (error) => {
+      console.log("error", error, response)
+    }
+  })
   if (!props.show) {
     return null
   }
+  
   let authors = []
-  if(props.authors)
+  if(props.authors){
     authors = props.authors
-  console.log("authors: ", authors)
+  }
 
   const submit = (event) => {
     event.preventDefault()
-    console.log(event.target.name.value, event.target.born.value)
-    editBirthYear({
-      name: event.target.name.value,
-      setBornTo: event.target.born.value
-    })
     
+    editBirthYear({
+      variables: {
+          name: event.target.name.value,
+          setBornTo: event.target.born.value
+        
+    }}).then(res => console.log("oho", res))
+    .catch(err => console.error("heyo", err))
+    console.log("data:", data, called, loading, response)
+
     event.target.name.value = ''
     event.target.born.value = ''
-
-
   }
   return (
     <div>
