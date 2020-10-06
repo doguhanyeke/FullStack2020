@@ -20,9 +20,8 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
     type Mutation {
       addBook(
         title: String!
-        author: String!
         published: Int!
-        genres: [String]!
+        genres: [String!]!
       ): Book
       editAuthor(
         name: String!
@@ -53,11 +52,11 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
   const resolvers = {
     Mutation: {
       addBook: (root, args) => {
-        const author = Author.findOne({name: "Robert Martin"})
-        console.log("author: ", author)
-        const book = new Book({ ...args,  author: author.id})
-        console.log("book: ", book)
-        return book.save()
+        Author.findOne({name: "Robert Martin"}).then(res => {
+          const book = new Book({ ...args,  author: res._id})
+          console.log("createdBook", book)
+          return book.save()
+        })
         /*
         console.log("add book")
         isAuthorExist = authors.reduce((isExist, author) => {
@@ -95,8 +94,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         return Author.collection.countDocuments()
       },
       allBooks: (root, args) => { 
+        Book.find({}).populate('author').then(res => console.log("resBooks", res))
         const books = Book.find({}).populate('author')
-        console.log("allBooks")
+        console.log("allBooks",)
         return books
         /*  
         console.log("All books entered")   
@@ -121,10 +121,13 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
     },
     Author: {
       bookCount: (root, args) => {
+        /*
         return books.reduce((count, book) => {
           count += book.name === root.name ? 1 : 0
           return count
         }, 0)
+        */
+       return 0
       }
     }
 }
