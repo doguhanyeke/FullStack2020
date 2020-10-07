@@ -2,7 +2,6 @@ const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
-const { v1: uuid } = require('uuid')
 
 const MONGODB_URI = 'mongodb+srv://fullstack_dogu:123@cluster0.kcozd.mongodb.net/part8?retryWrites=true&w=majority'
 
@@ -57,32 +56,13 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
           console.log("createdBook", book)
           return book.save()
         })
-        /*
-        console.log("add book")
-        isAuthorExist = authors.reduce((isExist, author) => {
-          isExist = args.author === author.name ? true : (isExist || false)
-          return isExist
-        }, false)
-        if(!isAuthorExist){
-          const author = {
-            name: args.author,
-            id: uuid()
-          }
-          authors = authors.concat(author)
-        }
-
-        books = books.concat(book)
-        return book
-        */
       },
       editAuthor: (root, args) => {
         console.log("edit", args)
-        const returnedAuthor = authors.find(author => author.name === args.name)
-        if(returnedAuthor){
-          returnedAuthor.born = args.setBornTo
-          authors = authors.map(author => author.name === args.name ? returnedAuthor : author)
-        }
-        return returnedAuthor
+        Author.findOne({name: args.name}).then(res => {
+          res.born = args.setBornTo
+          res.save().then(result => {return result})
+        })        
       }
     },
     Query: {
@@ -95,23 +75,12 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       },
       allBooks: (root, args) => { 
         Book.find({}).populate('author').then(res => console.log("resBooks", res))
-        const books = Book.find({}).populate('author')
-        console.log("allBooks",)
-        return books
-        /*  
-        console.log("All books entered")   
-        if(args.length !== 0){
-          if(args.author && args.genre){
-            return (books.filter(book => book.author === args.author && book.genres.includes(args.genre)))
-          }
-          else if(args.author){
-            return books.filter(book => book.author === args.author)
-          } else if(args.genre){
-            return books.filter(book => book.genres.includes(args.genre))
-          }
+        let books = Book.find({}).populate('author')
+        console.log("allBooks")
+        if(args.genre){
+          books = Book.find({genres: args.genre})
         }
         return books
-        */
       },
       allAuthors: (root, args) => {
         const authors = Author.find({})
@@ -120,14 +89,10 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       },
     },
     Author: {
-      bookCount: (root, args) => {
-        /*
-        return books.reduce((count, book) => {
-          count += book.name === root.name ? 1 : 0
-          return count
-        }, 0)
-        */
-       return 0
+      bookCount: async (root, args) => {
+        console.log("args", root.id)
+        const books = await Book.find({ author: root.id })  
+        return books.length
       }
     }
 }
