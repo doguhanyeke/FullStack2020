@@ -50,12 +50,18 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
 
   const resolvers = {
     Mutation: {
-      addBook: (root, args) => {
-        Author.findOne({name: "Robert Martin"}).then(res => {
-          const book = new Book({ ...args,  author: res._id})
-          console.log("createdBook", book)
-          return book.save()
-        })
+      addBook: async (root, args) => {
+        const res = await Author.findOne({name: "Robert Martin"})
+        const book = new Book({ ...args,  author: res._id})
+        try {
+          await book.save()
+        } catch(error) {
+          console.log("hıyarrrr")
+          throw new UserInputError(error.message, {
+            invalidArgs: args
+          })
+        }
+        return book
       },
       editAuthor: (root, args) => {
         console.log("edit", args)

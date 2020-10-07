@@ -4,6 +4,7 @@ import { CREATE_BOOK, ALL_BOOKS } from '../Queries'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
@@ -16,17 +17,23 @@ const NewBook = (props) => {
     return null
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
 
-    createBook( { variables: { 
-      title,
-      published: Number(published),
-      genres
-      } 
-    })
+    try {
+      await createBook( { variables: { 
+        title,
+        published: Number(published),
+        genres
+        } 
+      })
+    } catch(error) {
+      console.log("hıyarrr")
+      console.log(error.message)
+    }
     
     setTitle('')
+    setAuthor('')
     setPublished('')
     setGenres([])
     setGenre('')
@@ -45,6 +52,13 @@ const NewBook = (props) => {
           <input
             value={title}
             onChange={({ target }) => setTitle(target.value)}
+          />
+        </div>
+        <div>
+          author
+          <input
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
         <div>
