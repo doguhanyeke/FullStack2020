@@ -86,3 +86,9 @@ const NewBook = (props) => {
 }
 
 export default NewBook
+
+/*
+TODO: Anlık update etmiyor
+ve
+8.16 implement edilmedi.
+*/
