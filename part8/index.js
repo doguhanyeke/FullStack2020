@@ -26,12 +26,21 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         name: String!
         setBornTo: Int!
       ): Author
+      createUser(
+        username: String!
+        favoriteGenre: String!
+      ): User
+      login(
+        username: String!
+        password: String!
+      ): Token
     }
     type Query {
       bookCount: Int!
       authorCount: Int!
       allBooks(author: String, genre: String): [Book]!
       allAuthors: [Author]!
+      me: User
     }
     type Book {
       title: String!
@@ -45,6 +54,14 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       id: ID!
       born: Int
       bookCount: Int!
+    }
+    type User {
+      username: String!
+      favoriteGenre: String!
+      id: ID!
+    }
+    type Token{
+      value: String!
     }
     `
 
