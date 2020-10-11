@@ -2,6 +2,11 @@ const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
+const User = require('./models/user')
+
+const jwt = require('jsonwebtoken')
+
+const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
 const MONGODB_URI = 'mongodb+srv://fullstack_dogu:123@cluster0.kcozd.mongodb.net/part8?retryWrites=true&w=majority'
 
@@ -67,7 +72,11 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
 
   const resolvers = {
     Mutation: {
-      addBook: async (root, args) => {
+      addBook: async (root, args, context) => {
+        if(!context.currentUser){
+          return null
+        }
+        console.log("addBook", context.currentUser)
         const res = await Author.findOne({name: "Robert Martin"})
         const book = new Book({ ...args,  author: res._id})
         try {
@@ -80,12 +89,41 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         }
         return book
       },
-      editAuthor: (root, args) => {
-        console.log("edit", args)
+      editAuthor: (root, args, context) => {
+        if(!context.currentUser){
+          return null
+        }
+        console.log("edit", context.currentUser)
         Author.findOne({name: args.name}).then(res => {
           res.born = args.setBornTo
           res.save().then(result => {return result})
         })        
+      },
+      createUser: (root, args) => {
+        console.log("create user")
+        const user = new User({
+          username: args.username,
+          favoriteGenre: args.favoriteGenre
+        })
+        return user.save()
+        .catch(error => {
+          throw new UserInputError(error.message, {
+            invalidArgs: args
+          })
+        })
+      },
+      login: async (root, args) => {
+        console.log("login")
+        const user = await User.findOne({username: args.username})
+        if (!user || args.password !== 'secred') {
+          throw new UserInputError("wrong credentials")
+        }
+        const userToken = {
+          username: user.username,
+          id: user._id
+        }
+        console.log("login")
+        return {value: jwt.sign(userToken, JWT_SECRET)}
       }
     },
     Query: {
@@ -110,6 +148,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         console.log("allAuthors")
         return authors
       },
+      me: (root, args, context) => {
+        return context.currentUser
+      }
     },
     Author: {
       bookCount: async (root, args) => {
@@ -123,6 +164,15 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: async ({ req }) => {
+    const auth = req ? req.headers.authorization : null
+    if (auth && auth.toLowerCase().startsWith("bearer ")) {
+      const decodedToken = jwt.decode(auth.substring(7),
+       JWT_SECRET)
+       const currentUser = await User.findById(decodedToken.id)
+       return { currentUser }
+    }
+  }
 })
 
 server.listen().then(({ url }) => {
