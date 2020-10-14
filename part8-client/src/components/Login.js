@@ -2,13 +2,20 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import React, { useState } from 'react'
 import {LOGIN} from '../Queries'
 
-const Login = ({show}) => {
+const Login = ({show, user, setUser}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [ login ] = useMutation(LOGIN)
 
   if(!show){
     return null
+  }
+  if(user){
+    return(
+      <div>
+        Username: {user} logged in
+      </div>
+    )
   }
   const submit = async (event) => {
     event.preventDefault()
@@ -17,10 +24,11 @@ const Login = ({show}) => {
       const response = await login({
         variables: {
           username,
-        password
+          password
         }
       })
-      window.localStorage.setItem("userToken", "bearer " + response.data.login.value)
+      window.localStorage.setItem("userToken", `bearer ${response.data.login.value}`)
+      setUser(username)
       console.log("res", response)
     } catch(error) {
       console.log("login error", error.message)

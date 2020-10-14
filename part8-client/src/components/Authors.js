@@ -5,7 +5,7 @@ import Select from 'react-select'
 
 const Authors = (props) => {
   const [selectedOption, setSelectedOption] = useState(null)
-  const [editBirthYear, { data }] = useMutation(EDIT_BIRTHYEAR, {
+  const [ editBirthYear ] = useMutation(EDIT_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
   if (!props.show) {
@@ -21,18 +21,21 @@ const Authors = (props) => {
     console.log("options", options)
   }
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
     console.log("name", selectedOption)
-    editBirthYear( {
-      variables: {
-        name: selectedOption.value,
-        setBornTo: Number(event.target.born.value)
-      }
-    })
-    console.log("data:", data)
-
+    const value = event.target.born.value
     event.target.born.value = ''
+    try{
+      await editBirthYear( {
+        variables: {
+          name: selectedOption.value,
+          setBornTo: Number(value)
+        }
+      })
+    } catch(error) {
+      console.log(error.message)
+    }
   }
   return (
     <div>

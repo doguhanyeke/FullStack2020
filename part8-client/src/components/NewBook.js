@@ -21,11 +21,16 @@ const NewBook = (props) => {
     event.preventDefault()
 
     try {
-      await createBook( { variables: { 
-        title,
-        published: Number(published),
-        genres
-        } 
+      await createBook( { 
+        variables: { 
+          title,
+          author,
+          published: Number(published),
+          genres,
+        },
+        headers: {
+          Authorization: window.localStorage.getItem("userToken")
+        }
       })
     } catch(error) {
       console.log("hıyarrr")

@@ -8,6 +8,7 @@ import { ALL_AUTHORS, ALL_BOOKS } from './Queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
+  const [user, setUser] = useState(null)
   
   const [authors, setAuthors] = useState([])
   const authorResult = useQuery(ALL_AUTHORS)
@@ -26,6 +27,12 @@ const App = () => {
       setBooks(booksResult.data.allBooks)
     }
   }, [booksResult])
+
+  useEffect(() => {
+    if(window.localStorage.getItem("userToken")) {
+      window.localStorage.removeItem("userToken")
+    }
+  }, [])
 
   return (
     <div>
@@ -52,6 +59,8 @@ const App = () => {
 
       <Login 
         show={page === 'login'}
+        user={user}
+        setUser={setUser}
       />
 
     </div>

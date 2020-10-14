@@ -1,4 +1,4 @@
-const { ApolloServer, UserInputError, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, AuthenticationError, gql } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
@@ -24,6 +24,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
     type Mutation {
       addBook(
         title: String!
+        author: String!
         published: Int!
         genres: [String!]!
       ): Book
@@ -73,12 +74,15 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
   const resolvers = {
     Mutation: {
       addBook: async (root, args, context) => {
+
         if(!context.currentUser){
-          return null
+          throw new AuthenticationError("unauthenticated")
         }
-        console.log("addBook", context.currentUser)
-        const res = await Author.findOne({name: "Robert Martin"})
-        const book = new Book({ ...args,  author: res._id})
+
+        const author = await Author.findOne({name: args.author})
+
+        console.log("addBook", context.currentUser, author)
+        const book = new Book({ ...args,  author: author._id})
         try {
           await book.save()
         } catch(error) {
@@ -91,7 +95,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       },
       editAuthor: (root, args, context) => {
         if(!context.currentUser){
-          return null
+          throw new AuthenticationError("unauthenticated")
         }
         console.log("edit", context.currentUser)
         Author.findOne({name: args.name}).then(res => {
@@ -167,6 +171,7 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     const auth = req ? req.headers.authorization : null
     if (auth && auth.toLowerCase().startsWith("bearer ")) {
+      console.log("authenticated")
       const decodedToken = jwt.decode(auth.substring(7),
        JWT_SECRET)
        const currentUser = await User.findById(decodedToken.id)
