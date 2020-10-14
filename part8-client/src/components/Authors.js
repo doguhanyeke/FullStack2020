@@ -18,7 +18,6 @@ const Authors = (props) => {
     authors = props.authors
     console.log(authors)
     options = authors.map((author) => ({value: author.name, label: author.name}))
-    console.log("options", options)
   }
 
   const submit = async (event) => {
