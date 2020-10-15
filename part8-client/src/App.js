@@ -14,19 +14,22 @@ const App = () => {
   const authorResult = useQuery(ALL_AUTHORS)
 
   const [books, setBooks] = useState([])
+
+  const [ token, setToken ] = useState(null)
+
   const booksResult = useQuery(ALL_BOOKS)
   
   useEffect(() => {
     if(authorResult.data){
       setAuthors(authorResult.data.allAuthors)
     }
-  }, [authorResult])
+  }, [authorResult.data])
 
   useEffect(() => {
     if(booksResult.data){
       setBooks(booksResult.data.allBooks)
     }
-  }, [booksResult])
+  }, [booksResult.data])
 
   useEffect(() => {
     if(window.localStorage.getItem("userToken")) {
@@ -61,6 +64,7 @@ const App = () => {
         show={page === 'login'}
         user={user}
         setUser={setUser}
+        setToken={setToken}
       />
 
     </div>

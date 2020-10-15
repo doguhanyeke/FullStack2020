@@ -7,7 +7,7 @@ import {
   HttpLink,
   ApolloProvider
 } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context';
+import { setContext } from 'apollo-link-context';
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists

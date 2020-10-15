@@ -1,11 +1,25 @@
-import { useLazyQuery, useMutation } from '@apollo/client'
-import React, { useState } from 'react'
+import { useMutation } from '@apollo/client'
+import React, { useEffect, useState } from 'react'
 import {LOGIN} from '../Queries'
+import { useApolloClient } from '@apollo/client'
+import { setContext } from 'apollo-link-context';
 
-const Login = ({show, user, setUser}) => {
+const Login = ({show, user, setUser, setToken}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [ login ] = useMutation(LOGIN)
+  const [ login, result ] = useMutation(LOGIN, {
+    onError: (error) => {
+      console.log("error in login", error.graphQLErrors[0].message)
+    }
+  })
+  useEffect(() => {
+    if(result.data){
+      const token = result.data.login.value
+      setToken(token)
+      window.localStorage.setItem("userToken", token)
+    }
+  }, [result.data, setToken])
+  const client = useApolloClient()
 
   if(!show){
     return null
@@ -17,23 +31,16 @@ const Login = ({show, user, setUser}) => {
       </div>
     )
   }
+
   const submit = async (event) => {
     event.preventDefault()
-    console.log("submit", username, password)
-    try{
-      const response = await login({
+    await login({
         variables: {
           username,
           password
         }
-      })
-      window.localStorage.setItem("userToken", `bearer ${response.data.login.value}`)
-      setUser(username)
-      console.log("res", response)
-    } catch(error) {
-      console.log("login error", error.message)
-    }
-    
+    })
+    setUser(username)
   }
   return(
     <div>
