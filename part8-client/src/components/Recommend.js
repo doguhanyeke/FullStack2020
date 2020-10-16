@@ -5,18 +5,17 @@ import {FIND_USER} from '../Queries'
 const Recommend = (props) => {
   const wholebooks = props.books
 
-  const [favGenre, setFavGenre] = useState("")
-  console.log("ooo")
+  const [favGenre, setFavGenre] = useState(null)
   const [findUser, result] = useLazyQuery(FIND_USER, {
     variables: {
       username: props.username
     },
     onCompleted() {
-      console.log("res", result)
+      console.log("result of recommend", result)
       setFavGenre(result.data.findUser.favoriteGenre)
     },
     onError: (error) => {
-      console.log("here", error)
+      console.log("error in recommend", error)
     }
   })
 

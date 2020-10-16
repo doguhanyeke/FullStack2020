@@ -1,8 +1,6 @@
 import { useMutation } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 import {LOGIN} from '../Queries'
-import { useApolloClient } from '@apollo/client'
-import { setContext } from 'apollo-link-context';
 
 const Login = ({show, user, setUser, setToken}) => {
   const [username, setUsername] = useState('')
@@ -19,7 +17,6 @@ const Login = ({show, user, setUser, setToken}) => {
       window.localStorage.setItem("userToken", token)
     }
   }, [result.data, setToken])
-  const client = useApolloClient()
 
   if(!show){
     return null
