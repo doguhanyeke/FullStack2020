@@ -65,7 +65,7 @@ const App = () => {
       <Recommend
         show={page === 'recommend'}
         books={books}
-        user={user}
+        username={user}
       />
 
       <Login 

@@ -47,6 +47,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       allBooks(author: String, genre: String): [Book]!
       allAuthors: [Author]!
       me: User
+      findUser(username: String!): User
     }
     type Book {
       title: String!
@@ -154,6 +155,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
       },
       me: (root, args, context) => {
         return context.currentUser
+      },
+      findUser: async (root, args) => {
+        return await User.findOne({username: args.username})
       }
     },
     Author: {

@@ -66,3 +66,12 @@ export const LOGIN = gql`
     }
   }
 `
+
+export const FIND_USER = gql`
+  query findUserByName($username: String!) {
+      findUser(username: $username) {
+        username
+        favoriteGenre
+      }
+  }
+`
