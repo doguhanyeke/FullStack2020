@@ -1,10 +1,11 @@
-const { ApolloServer, UserInputError, AuthenticationError, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, AuthenticationError, gql, PubSub } = require('apollo-server')
 const mongoose = require('mongoose')
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
-
 const jwt = require('jsonwebtoken')
+
+const pubsub = new PubSub()
 
 const JWT_SECRET = 'NEED_HERE_A_SECRET_KEY'
 
@@ -70,6 +71,9 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
     type Token{
       value: String!
     }
+    type Subscription{
+      bookAdded: Book!
+    }
     `
 
   const resolvers = {
@@ -92,6 +96,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
             invalidArgs: args
           })
         }
+        pubsub.publish("BOOK_ADDED", {bookAdded: book})
         return book
       },
       editAuthor: (root, args, context) => {
@@ -102,7 +107,7 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         Author.findOne({name: args.name}).then(res => {
           res.born = args.setBornTo
           res.save().then(result => {return result})
-        })        
+        })
       },
       createUser: (root, args) => {
         console.log("create user")
@@ -166,6 +171,11 @@ mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true,
         const books = await Book.find({ author: root.id })  
         return books.length
       }
+    },
+    Subscription: {
+      bookAdded: {
+        subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"])
+      }
     }
 }
 
@@ -184,6 +194,7 @@ const server = new ApolloServer({
   }
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })
