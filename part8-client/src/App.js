@@ -45,7 +45,13 @@ const App = () => {
         <button onClick={() => setPage('books')}>books</button>
         <button onClick={() => setPage('add')}>add book</button>
         <button onClick={() => setPage('recommend')}>recommend</button>
-        <button onClick={() => setPage('login')}>{window.localStorage.getItem("userToken") ? "logout" : "login"}</button>
+        <button onClick={() => {
+          setPage('login')
+          if(window.localStorage.getItem("userToken") ) {
+            window.localStorage.removeItem("userToken")
+            setUser(null)
+          }
+          }}>{window.localStorage.getItem("userToken") ? "logout" : "login"}</button>
       </div>
 
       <Authors
