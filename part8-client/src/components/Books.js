@@ -7,7 +7,7 @@ const Books = (props) => {
 
   const [filterBooks, result] = useLazyQuery(ALL_BOOKS_BY_GENRE, {
     onError: (error) => {
-      console.log(error)
+      console.log("error in books", error)
     }
   })
 
@@ -17,7 +17,7 @@ const Books = (props) => {
         genre: genreFilter
       }
     })
-  }, [genreFilter, filterBooks])
+  }, [filterBooks])
   
   if (!props.show) {
     return null
