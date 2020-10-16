@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Books = (props) => {
+
   const [filteredBooks, setFilteredBooks ] = useState(props.books)
+  useEffect(() => {
+    setFilteredBooks(props.books)
+  }, [props])
+  
   if (!props.show) {
     return null
   }
-  console.log("filtered books: ", filteredBooks)
 
   let books = []
   let genres = new Set()
