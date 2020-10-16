@@ -8,10 +8,9 @@ import {
   ApolloProvider,
   split
 } from '@apollo/client'
-import { setContext } from 'apollo-link-context';
-import {getMainDefinition} from '@apollo/client/utilities'
-
-import {WebSocketLink} from '@apollo/client/link/ws'
+import { setContext } from 'apollo-link-context'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { WebSocketLink } from '@apollo/client/link/ws'
 
 const authLink = setContext((_, { headers }) => {
   // get the authentication token from local storage if it exists
@@ -30,22 +29,22 @@ const httpLink = new HttpLink({
 })
 
 const wsLink = new WebSocketLink({
-  uri: 'http://localhost:4000/graphql',
+  uri: `ws://localhost:4000/graphql`,
   options: {
     reconnect: true
   }
 })
 
 const splitLink = split(
-  ({query}) => {
-    const definiton = getMainDefinition(query)
+  ({ query }) => {
+    const definition = getMainDefinition(query)
     return (
-      definiton.kind === 'OperationDefinition' &&
-      definiton.operation === 'subscription'
-    )
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
   },
   wsLink,
-  authLink.concat( httpLink )
+  authLink.concat(httpLink),
 )
 
 const client = new ApolloClient({
