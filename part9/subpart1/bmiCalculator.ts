@@ -1,13 +1,13 @@
 
-const bmiCalculator = (height: number, weight: number): String => {
-  const bmi = (weight * 10000) / (height * height)
+const bmiCalculator = (height: number, weight: number): string => {
+  const bmi = (weight * 10000) / (height * height);
   if(bmi < 25) {
-    return "normal"
+    return "normal";
   } else if (bmi < 29) {
-    return "overweight"
+    return "overweight";
   } else {
-    return "obese"
+    return "obese";
   }
 }
 
-console.log(bmiCalculator(180, 74))
+console.log(bmiCalculator(180, 74));
