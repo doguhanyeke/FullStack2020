@@ -27,4 +27,15 @@ const calculateExercises = (exerciseHours: Array<number>, target: number): Resul
   return result;
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const workingHours: Array<number> = [];
+console.log(process.argv.length)
+for(var i=0; i<process.argv.length - 3; i+=1){
+  workingHours.push(Number(process.argv[i+3]));
+}
+const target: number = Number(process.argv[2]);
+
+try{
+  console.log(calculateExercises(workingHours, target));
+} catch(e) {
+  console.log(e)
+}
