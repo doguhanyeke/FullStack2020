@@ -1,4 +1,3 @@
-
 const bmiCalculator = (height: number, weight: number): string => {
   const bmi = (weight * 10000) / (height * height);
   if(bmi < 25) {
@@ -8,10 +7,10 @@ const bmiCalculator = (height: number, weight: number): string => {
   } else {
     return "obese";
   }
-}
+};
 
-const height: number = Number(process.argv[2]);
-const weight: number = Number(process.argv[3]);
+const height = Number(process.argv[2]);
+const weight = Number(process.argv[3]);
 console.log(bmiCalculator(height, weight));
 
-export default bmiCalculator
+export default bmiCalculator;
