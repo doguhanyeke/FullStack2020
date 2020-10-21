@@ -9,33 +9,51 @@ interface Result {
 }
 
 const calculateExercises = (exerciseHours: Array<number>, target: number): Result => {
-  const sumOfExercises = exerciseHours.reduce((sum, e) => {
+  const sumOfExercises: number = exerciseHours.reduce((sum, e) => {
     sum += e
     return sum
   }, 0)
+  if(exerciseHours.length === 0){
+    throw new Error("exercise hours length is 0")
+  }
+  const average: number = sumOfExercises / exerciseHours.length
   
   const result = {
     periodLength: exerciseHours.length,
     trainingDays: exerciseHours.filter(e => e>0).length,
     target: target,
-    average: sumOfExercises / exerciseHours.length,
-    success: (sumOfExercises / exerciseHours.length) > target ? true : false,
-    rating: Math.ceil(sumOfExercises / exerciseHours.length),
+    average: average,
+    success: average > target ? true : false,
+    rating: Math.ceil(average),
     ratingDescription: 'not too bad but could be better',
 
   }
   return result;
 }
 
-const workingHours: Array<number> = [];
-console.log(process.argv.length)
-for(var i=0; i<process.argv.length - 3; i+=1){
-  workingHours.push(Number(process.argv[i+3]));
+const parseArguments = () => {
+  if(process.argv.length < 3){
+    throw new Error("not enough arguments")
+  }
+
+  const workingHours: Array<number> = [];
+  for(var i=0; i<process.argv.length - 3; i+=1){
+    if(isNaN(Number(process.argv[i+3]))){
+      throw new Error("argument not a number")
+    }
+    workingHours.push(Number(process.argv[i+3]));
+  }
+  if(isNaN(Number(process.argv[2]))){
+    throw new Error("argument not a number")
+  }
+  const target: number = Number(process.argv[2]);
+  return {workingHours, target}
 }
-const target: number = Number(process.argv[2]);
+
 
 try{
-  console.log(calculateExercises(workingHours, target));
+  const args = parseArguments()
+  console.log(calculateExercises(args.workingHours, args.target));
 } catch(e) {
   console.log(e)
 }
