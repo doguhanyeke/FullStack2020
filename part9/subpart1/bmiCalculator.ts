@@ -13,3 +13,5 @@ const bmiCalculator = (height: number, weight: number): string => {
 const height: number = Number(process.argv[2]);
 const weight: number = Number(process.argv[3]);
 console.log(bmiCalculator(height, weight));
+
+export default bmiCalculator
