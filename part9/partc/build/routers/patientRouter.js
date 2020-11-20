@@ -9,4 +9,10 @@ const router = express_1.default.Router();
 router.get("/", (_req, res) => {
     res.send(patientService_1.default.getPatients());
 });
+router.post("/", (req, res) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { name, dateOfBirth, ssn, gender, occupation } = req.body;
+    const newPatientEntry = patientService_1.default.addPatient(name, dateOfBirth, gender, occupation, ssn);
+    res.json(newPatientEntry);
+});
 exports.default = router;
