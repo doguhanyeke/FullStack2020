@@ -1,5 +1,5 @@
 import patientData from '../data/patients.json';
-import { Patient, Gender } from '../types';
+import { Patient, NewPatient } from '../types';
 
 const patients: Array<Patient> = patientData as Array<Patient>;
 
@@ -13,20 +13,14 @@ const getPatients = (): Omit<Patient, "ssn">[] => {
     }));
 };
 
-const addPatient = (
-    name: string,
-    dateOfBirth: string,
-    ssn: string,
-    gender: Gender,
-    occupation: string
-): Patient => {
+const addPatient = (obj: NewPatient): Patient => {
     const newPatient: Patient = {
         id: "d2773336-f723-11e9-8f0b-362b9e155667",
-        dateOfBirth,
-        name,
-        ssn,
-        gender,
-        occupation
+        dateOfBirth: obj.dateOfBirth,
+        name: obj.name,
+        ssn: obj.ssn,
+        gender: obj.gender,
+        occupation: obj.occupation
     };
     patients.push(newPatient);
     return newPatient;

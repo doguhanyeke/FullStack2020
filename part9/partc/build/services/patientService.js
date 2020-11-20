@@ -14,14 +14,14 @@ const getPatients = () => {
         occupation
     }));
 };
-const addPatient = (name, dateOfBirth, ssn, gender, occupation) => {
+const addPatient = (obj) => {
     const newPatient = {
         id: "d2773336-f723-11e9-8f0b-362b9e155667",
-        dateOfBirth,
-        name,
-        ssn,
-        gender,
-        occupation
+        dateOfBirth: obj.dateOfBirth,
+        name: obj.name,
+        ssn: obj.ssn,
+        gender: obj.gender,
+        occupation: obj.occupation
     };
     patients.push(newPatient);
     return newPatient;
