@@ -1,17 +1,35 @@
 import React from "react";
+import Part from "./Part";
 
-interface ContentProps {
-    courseName: string;
+// new types
+interface CoursePartBase {
+    name: string;
     exerciseCount: number;
 }
 
-const Content: React.FC<ContentProps> = (props) => {
+interface CoursePartBase2 extends CoursePartBase {
+    description: string;
+}
+
+interface CoursePartOne extends CoursePartBase2 {
+    name: "Fundamentals";
+}
+
+interface CoursePartTwo extends CoursePartBase {
+    name: "Using props to pass data";
+    groupProjectCount: number;
+}
+
+interface CoursePartThree extends CoursePartBase2 {
+    name: "Deeper type usage";
+    exerciseSubmissionLink: string;
+}
+
+type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree;
+
+const Content: React.FC<CoursePart> = (props) => {
     return (
-        <div>
-            <p>
-            {props.courseName} {props.exerciseCount}
-            </p> 
-        </div>
+        <Part {...props} />
     );
 };
 
