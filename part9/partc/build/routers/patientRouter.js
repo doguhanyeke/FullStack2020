@@ -26,11 +26,9 @@ router.post("/", (req, res) => {
 });
 router.get("/:id", (req, res) => {
     try {
-        console.log("hhhheeee");
         const patientId = req.params.id;
         const allPatients = patientService_1.default.getPatients();
         const theuser = allPatients.find(patient => patient.id === patientId);
-        console.log("hereeeee");
         res.status(200).send(theuser);
     }
     catch (e) {
