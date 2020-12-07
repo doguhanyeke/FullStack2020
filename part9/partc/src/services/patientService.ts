@@ -4,12 +4,13 @@ import { Patient, NewPatient } from '../types';
 const patients: Array<Patient> = patientData as Array<Patient>;
 
 const getPatients = (): Omit<Patient, "ssn">[] => {
-    return patients.map(({id, name, dateOfBirth, gender, occupation}) => ({
+    return patients.map(({id, name, dateOfBirth, gender, occupation, entries}) => ({
         id,
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
+        entries
     }));
 };
 
@@ -20,7 +21,8 @@ const addPatient = (obj: NewPatient): Patient => {
         name: obj.name,
         ssn: obj.ssn,
         gender: obj.gender,
-        occupation: obj.occupation
+        occupation: obj.occupation,
+        entries: []
     };
     patients.push(newPatient);
     return newPatient;

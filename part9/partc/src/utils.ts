@@ -35,6 +35,10 @@ const parseString = (obj: any): string => {
     return obj;
 };
 
+const parseArray = (obj: any): string[] => {
+    return obj;
+};
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toPatient = (object: any): NewPatient => {
     return {
@@ -42,7 +46,8 @@ const toPatient = (object: any): NewPatient => {
         ssn: parseString(object.ssn),
         occupation: parseString(object.occupation),
         gender: parseGender(object.gender),
-        dateOfBirth: parseDate(object.dateOfBirth)
+        dateOfBirth: parseDate(object.dateOfBirth),
+        entries: parseArray(object.entries)
     };
 };
 

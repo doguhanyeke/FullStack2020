@@ -30,6 +30,9 @@ const parseString = (obj) => {
     }
     return obj;
 };
+const parseArray = (obj) => {
+    return obj;
+};
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toPatient = (object) => {
     return {
@@ -37,7 +40,8 @@ const toPatient = (object) => {
         ssn: parseString(object.ssn),
         occupation: parseString(object.occupation),
         gender: parseGender(object.gender),
-        dateOfBirth: parseDate(object.dateOfBirth)
+        dateOfBirth: parseDate(object.dateOfBirth),
+        entries: parseArray(object.entries)
     };
 };
 exports.default = toPatient;

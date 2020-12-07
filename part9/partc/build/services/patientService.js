@@ -6,12 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const patients_json_1 = __importDefault(require("../data/patients.json"));
 const patients = patients_json_1.default;
 const getPatients = () => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
         id,
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
+        entries
     }));
 };
 const addPatient = (obj) => {
@@ -21,7 +22,8 @@ const addPatient = (obj) => {
         name: obj.name,
         ssn: obj.ssn,
         gender: obj.gender,
-        occupation: obj.occupation
+        occupation: obj.occupation,
+        entries: []
     };
     patients.push(newPatient);
     return newPatient;

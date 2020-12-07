@@ -5,6 +5,7 @@ import toPatient from '../utils';
 const router = express.Router();
 
 router.get("/", (_req, res) => {
+    console.log("getttt");
     res.send(patientService.getPatients());
 });
 
@@ -20,6 +21,17 @@ router.post("/", (req, res) => {
         res.status(400).send(e.message);
     }
         
+});
+
+router.get("/:id", (req, res) => {
+    try{
+        const patientId = req.params.id;
+        const allPatients = patientService.getPatients();
+        const theuser = allPatients.find(patient => patient.id === patientId);
+        res.status(200).send(theuser);
+    } catch (e) {
+        res.status(404).send(e);
+    }
 });
 
 export default router;
