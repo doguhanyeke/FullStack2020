@@ -5,13 +5,14 @@ import toPatient from '../utils';
 const router = express.Router();
 
 router.get("/", (_req, res) => {
-    console.log("getttt");
+    console.log("GET /");
     res.send(patientService.getPatients());
 });
 
 router.post("/", (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     try{
+        console.log("POST /");
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const newPatient = toPatient(req.body);
         const newPatientEntry = patientService.addPatient(newPatient);
@@ -25,6 +26,7 @@ router.post("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
     try{
+        console.log("GET /:id");
         const patientId = req.params.id;
         const allPatients = patientService.getPatients();
         const theuser = allPatients.find(patient => patient.id === patientId);

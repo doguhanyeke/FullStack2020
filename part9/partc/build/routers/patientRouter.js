@@ -8,12 +8,13 @@ const patientService_1 = __importDefault(require("../services/patientService"));
 const utils_1 = __importDefault(require("../utils"));
 const router = express_1.default.Router();
 router.get("/", (_req, res) => {
-    console.log("getttt");
+    console.log("GET /");
     res.send(patientService_1.default.getPatients());
 });
 router.post("/", (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     try {
+        console.log("POST /");
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const newPatient = utils_1.default(req.body);
         const newPatientEntry = patientService_1.default.addPatient(newPatient);
@@ -26,6 +27,7 @@ router.post("/", (req, res) => {
 });
 router.get("/:id", (req, res) => {
     try {
+        console.log("GET /:id");
         const patientId = req.params.id;
         const allPatients = patientService_1.default.getPatients();
         const theuser = allPatients.find(patient => patient.id === patientId);
