@@ -53,7 +53,7 @@ const PatientListPage: React.FC = () => {
         <Table.Body>
           {Object.values(patients).map((patient: Patient) => (
             <Table.Row key={patient.id}>
-              <Table.Cell><a href={patient.name}>{patient.name}</a></Table.Cell>
+              <Table.Cell><a href={`/patients/${patient.id}`}>{patient.name}</a></Table.Cell>
               <Table.Cell>{patient.gender}</Table.Cell>
               <Table.Cell>{patient.occupation}</Table.Cell>
               <Table.Cell>

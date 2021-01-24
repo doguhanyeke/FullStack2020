@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { Gender, NewPatient } from './types';
+import { Gender, NewPatient, Entry } from './types';
 
 const isDate = (obj: any): boolean => {
     return Boolean(Date.parse(obj));
@@ -35,7 +35,7 @@ const parseString = (obj: any): string => {
     return obj;
 };
 
-const parseArray = (obj: any): string[] => {
+const parseArray = (obj: any): Entry[] => {
     return obj;
 };
 

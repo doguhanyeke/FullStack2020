@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { BrowserRouter as Router, Route, Link, Switch, useParams } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
@@ -29,17 +29,17 @@ const App: React.FC = () => {
     fetchPatientList();
   }, [dispatch]);
   
-  const id = "d2773336-f723-11e9-8f0b-362b9e155667";
+  // const { id } = useParams<{ id: string }>();
+  // const id = "d2773336-f723-11e9-8f0b-362b9e155667";
 
-  function specificPatient(): Patient | null {
+  const specificPatient = (id: string): Patient | null => {
     if (id){
-      console.log("id");
-      console.log(JSON.stringify(patients[id]));
-      return patients[id];  
+      const patient = patients[id];
+      return patient;
     } else {
       return null;
     }
-  }
+  };
 
   return (
     <div className="App">
@@ -51,7 +51,7 @@ const App: React.FC = () => {
           </Button>
           <Divider hidden />
           <Switch>
-            {specificPatient() && <Route path="/:id" render={() => <SinglePatientPage {...specificPatient() } />} />}
+            <Route path={"/patients/:id"} render={() => <SinglePatientPage specificPatient={specificPatient} />} />
             <Route path="/" render={() => <PatientListPage />} />
           </Switch>
         </Container>
