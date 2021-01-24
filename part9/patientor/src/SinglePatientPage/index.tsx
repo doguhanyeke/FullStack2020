@@ -66,25 +66,30 @@ const SinglePatientPage: React.FC<Props> = (props: Props) => {
                     {"Entries"}
                 </p>
                 <Table striped>
-                <Table.Body>
                 {patient.entries.map((entry: Entry) => (
-                    <Table.Row key={entry.id}>
-                    <Table.Row>{entry.date}{renderSwitchIconHospital(entry.type)}</Table.Row>
-                    <Table.Row>{entry.description}</Table.Row>
+                    <Table.Body key={entry.id}>
+                    <Table.Row>
+                        <Table.Cell>
+                        {entry.date} {renderSwitchIconHospital(entry.type)}
+                        </Table.Cell>
+                    </Table.Row>
+                    <Table.Row>
+                        <Table.Cell>
+                        {entry.description}
+                        </Table.Cell>
+                    </Table.Row>
                     {entry.diagnosisCodes?.map((code) => {
                                 const diagnose = props.specificDiagnose(code);
-                                if (!diagnose) {
-                                    return null;
-                                }
-                                return (
-                                    <Table.Row>
+                                return diagnose 
+                                    ? <Table.Row key={diagnose.code}>
+                                        <Table.Cell>
                                         {diagnose.code} {diagnose.name} {diagnose.latin}
-                                    </Table.Row>
-                                );
-                                })}
-                    </Table.Row>
+                                        </Table.Cell>
+                                        </Table.Row>
+                                    : null;
+                    })}
+                    </Table.Body>
                 ))}
-                </Table.Body>
                 </Table>
             </h2>
         </div>
