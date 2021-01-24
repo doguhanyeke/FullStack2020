@@ -4,6 +4,7 @@ import { Entry } from '../types';
 
 interface Props {
     specificPatient: Function;
+    specificDiagnose: Function;
 }
 
 const SinglePatientPage: React.FC<Props> = (props: Props) => {
@@ -36,9 +37,13 @@ const SinglePatientPage: React.FC<Props> = (props: Props) => {
                                 {entry.date} {entry.description}
                             </a>
                             {entry.diagnosisCodes?.map((code) => {
+                                const diagnose = props.specificDiagnose(code);
+                                if (!diagnose) {
+                                    return null;
+                                }
                                 return (
-                                    <li>
-                                        {code}
+                                    <li key={diagnose.code}>
+                                        {diagnose.code} {diagnose.name} {diagnose.latin}
                                     </li>
                                 );
                                 })}

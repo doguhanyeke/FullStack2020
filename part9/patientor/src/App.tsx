@@ -5,13 +5,14 @@ import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
 import { useStateValue } from "./state";
-import { Patient } from "./types";
+import { Diagnosis, Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import SinglePatientPage from "./SinglePatientPage";
 
 const App: React.FC = () => {
-  const [{patients}, dispatch] = useStateValue();
+  const [{patients}, dispatchPatients] = useStateValue();
+  const [{diagnoses}, dispatchDiagnosis] = useStateValue();
   // const {id} = useParams<{ id: string }>();
 
   React.useEffect(() => {
@@ -21,13 +22,25 @@ const App: React.FC = () => {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
           `${apiBaseUrl}/patients`
         );
-        dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
+        dispatchPatients({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
       } catch (e) {
         console.error(e);
       }
     };
     fetchPatientList();
-  }, [dispatch]);
+
+    const fetchDiagnosisList = async () => {
+      try {
+        const {data: diagnosisListFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatchDiagnosis({ type: "SET_DIAGNOSES_LIST", payload: diagnosisListFromApi });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchDiagnosisList();
+  }, [dispatchPatients, dispatchDiagnosis]);
   
   // const { id } = useParams<{ id: string }>();
   // const id = "d2773336-f723-11e9-8f0b-362b9e155667";
@@ -41,6 +54,15 @@ const App: React.FC = () => {
     }
   };
 
+  const specificDiagnose = (code: string): Diagnosis | null => {
+    if (code) {
+      const diagnose = diagnoses[code];
+      return diagnose;
+    } else {
+      return null;
+    }
+  }
+
   return (
     <div className="App">
       <Router>
@@ -51,7 +73,7 @@ const App: React.FC = () => {
           </Button>
           <Divider hidden />
           <Switch>
-            <Route path={"/patients/:id"} render={() => <SinglePatientPage specificPatient={specificPatient} />} />
+            <Route path={"/patients/:id"} render={() => <SinglePatientPage specificDiagnose={specificDiagnose} specificPatient={specificPatient} />} />
             <Route path="/" render={() => <PatientListPage />} />
           </Switch>
         </Container>
