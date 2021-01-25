@@ -1,8 +1,9 @@
 // import patientData from '../data/patients.json';
 import patientData from '../data/patients';
-import { Patient, NewPatient } from '../types';
+import { Patient, NewPatient, Entry, PublicPatient } from '../types';
+import { generateUniqueID } from '../utils';
 
-const patients: Array<Patient> = patientData;
+export let patients: Array<Patient> = patientData;
 
 const getPatients = (): Omit<Patient, "ssn">[] => {
     return patients.map(({id, name, dateOfBirth, gender, occupation, entries}) => ({
@@ -17,7 +18,7 @@ const getPatients = (): Omit<Patient, "ssn">[] => {
 
 const addPatient = (obj: NewPatient): Patient => {
     const newPatient: Patient = {
-        id: "d2773336-f723-11e9-8f0b-362b9e155667",
+        id: generateUniqueID(),
         dateOfBirth: obj.dateOfBirth,
         name: obj.name,
         ssn: obj.ssn,
@@ -29,7 +30,14 @@ const addPatient = (obj: NewPatient): Patient => {
     return newPatient;
 };
 
+const addEntryToPatient = (obj: Patient, entry: Entry): PublicPatient => {
+    obj.entries.push(entry);
+    patients = patients.map(patient => patient.id === obj.id ? obj : patient);
+    return obj;
+};
+
 export default {
     getPatients,
-    addPatient
+    addPatient,
+    addEntryToPatient
 };

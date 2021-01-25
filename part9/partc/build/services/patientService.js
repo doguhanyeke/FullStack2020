@@ -3,11 +3,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.patients = void 0;
 // import patientData from '../data/patients.json';
 const patients_1 = __importDefault(require("../data/patients"));
-const patients = patients_1.default;
+const utils_1 = require("../utils");
+exports.patients = patients_1.default;
 const getPatients = () => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
+    return exports.patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({
         id,
         name,
         dateOfBirth,
@@ -18,7 +20,7 @@ const getPatients = () => {
 };
 const addPatient = (obj) => {
     const newPatient = {
-        id: "d2773336-f723-11e9-8f0b-362b9e155667",
+        id: utils_1.generateUniqueID(),
         dateOfBirth: obj.dateOfBirth,
         name: obj.name,
         ssn: obj.ssn,
@@ -26,10 +28,16 @@ const addPatient = (obj) => {
         occupation: obj.occupation,
         entries: []
     };
-    patients.push(newPatient);
+    exports.patients.push(newPatient);
     return newPatient;
+};
+const addEntryToPatient = (obj, entry) => {
+    obj.entries.push(entry);
+    exports.patients = exports.patients.map(patient => patient.id === obj.id ? obj : patient);
+    return obj;
 };
 exports.default = {
     getPatients,
-    addPatient
+    addPatient,
+    addEntryToPatient
 };

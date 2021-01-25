@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Entry } from '../types';
-import { Icon, Table } from 'semantic-ui-react'
+import { Icon, Table } from 'semantic-ui-react';
 
 interface Props {
     specificPatient: Function;
