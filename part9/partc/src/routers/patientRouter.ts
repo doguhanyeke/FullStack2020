@@ -45,16 +45,16 @@ router.post("/:id/entries", (req, res) => {
         console.log("POST /:id/entries");
         console.log("hi", req.body);
         const entry = toEntry(req.body);
-        console.log("hey");
+        console.log("hala", entry, "lannn");
         const patientId = req.params.id;
         const thepatient = patients.find(patient => patient.id === patientId);
         console.log("here", patientId, thepatient, entry);
         if (thepatient && entry) {
             console.log("hoba");
-            const publicPatient = patientService.addEntryToPatient(thepatient, entry);
+            patientService.addEntryToPatient(thepatient, entry);
             console.log("hoba2");
-            res.status(200).json(publicPatient);
-            console.log("son hali", publicPatient);
+            res.status(200).json(entry);
+            console.log("son hali", entry);
             return;
         }
         res.status(404).end();

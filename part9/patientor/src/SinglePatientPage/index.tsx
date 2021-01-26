@@ -1,7 +1,12 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Entry } from '../types';
-import { Icon, Table } from 'semantic-ui-react';
+import { Button, Icon, Table } from 'semantic-ui-react';
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
+import axios from "axios";
+import { apiBaseUrl } from "../constants";
+import AddEntryModal from "../AddEntryModal";
+import { useStateValue } from "../state";
 
 interface Props {
     specificPatient: Function;
@@ -9,6 +14,10 @@ interface Props {
 }
 
 const SinglePatientPage: React.FC<Props> = (props: Props) => {
+    const [state, dispatch] = useStateValue();
+    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [error, setError] = React.useState<string | undefined>();
+
     const { id } = useParams<{ id: string }>();
     const patient = props.specificPatient(id);
     console.log("bana gelen", patient);
@@ -49,6 +58,30 @@ const SinglePatientPage: React.FC<Props> = (props: Props) => {
                 return null;
         }
     };
+
+    
+    const openModal = (): void => setModalOpen(true);
+
+    const closeModal = (): void => {
+        setModalOpen(false);
+        setError(undefined);
+    };
+
+    const submitNewEntry = async (values: EntryFormValues) => {
+        try {
+        const { data: newEntry } = await axios.post<Entry>(
+            `${apiBaseUrl}/patients/${id}/entries`,
+            values
+        );
+        console.log("data ne", newEntry);
+        dispatch({ type: "ADD_ENTRY", payload: { patientId: id, entry: newEntry}});
+        closeModal();
+        } catch (e) {
+        console.error(e.response.data);
+        setError(e.response.data.error);
+        }
+    };
+
     return (
         <div>
             <h1>
@@ -56,14 +89,14 @@ const SinglePatientPage: React.FC<Props> = (props: Props) => {
                 {renderSwitchIcon(patient.gender)}
             </h1>
             <p>
-                {`ssn: ${patient.ssn}`}
+                {`Ssn: ${patient.ssn}`}
             </p>
             <p>
-                {`occupation: ${patient.occupation}`}
+                {`Occupation: ${patient.occupation}`}
             </p>
             <h2>
                 <p>
-                    {"Entries"}
+                    {"Patient Entries"}
                 </p>
                 <Table striped>
                 {patient.entries.map((entry: Entry) => (
@@ -92,6 +125,13 @@ const SinglePatientPage: React.FC<Props> = (props: Props) => {
                 ))}
                 </Table>
             </h2>
+            <AddEntryModal 
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            error={error}
+            onClose={closeModal}
+            />
+            <Button onClick={() => openModal()}>Add Entry</Button>
         </div>
     );
     

@@ -1,5 +1,5 @@
 import { State } from "./state";
-import { Diagnosis, Patient } from "../types";
+import { Diagnosis, Entry, Patient } from "../types";
 
 export type Action =
   | {
@@ -13,7 +13,14 @@ export type Action =
   | {
       type: "SET_DIAGNOSES_LIST";
       payload: Array<Diagnosis>;
-  };
+    }
+  | {
+      type: "ADD_ENTRY";
+      payload: {
+        entry: Entry;
+        patientId: string;
+      };
+    };
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -47,6 +54,27 @@ export const reducer = (state: State, action: Action): State => {
           ...state.diagnoses
         }
       };
+    case "ADD_ENTRY":
+      let patientToBeUpdated: Patient;
+      Object.values(state.patients).forEach(patient => {
+        if (patient.id === action.payload.patientId) {
+          patient.entries.push(action.payload.entry);
+          patientToBeUpdated = patient;
+          console.log("new patient", patientToBeUpdated, action.payload.entry);
+          if(!patientToBeUpdated) {
+            return state;
+          }
+          return {
+            ...state,
+            patients: {
+              ...state.patients,
+              [action.payload.patientId]: patientToBeUpdated
+              }
+            };
+        }
+      });
+      return state;
+      
     default:
       return state;
   }
